@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Smart Cart">
+<title>Smart Cart</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #fffcf4;
+  --cream-dark: #f5f0e4;
+  --cream-border: #ead8b0;
+  --amber: #c47a10;
+  --amber-light: #fff0c8;
+  --amber-border: #e8d090;
+  --cobalt: #1848a0;
+  --cobalt-light: #e8f0fc;
+  --cobalt-border: #c0d4f0;
+  --text-dark: #2a1e08;
+  --text-mid: #7a6040;
+  --text-muted: #b09050;
+  --green: #2d7a3a;
+  --green-light: #e8f5e4;
+  --red: #c0392b;
+  --red-light: #fdeaea;
+  --purple: #6a2a8a;
+  --purple-light: #f0e4f8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-height: 100vh; color: var(--text-dark); overflow-x: hidden; }
+
+/* HEADER */
+.header { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 14px 18px 10px; position: sticky; top: 0; z-index: 100; }
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.app-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text-dark); letter-spacing: -0.5px; }
+.app-title span { color: var(--amber); }
+.total-badge { background: var(--green-light); color: var(--green); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 20px; border: 1px solid #c4e0c8; }
+.header-sub { font-size: 11px; color: var(--text-muted); font-weight: 300; display: flex; align-items: center; gap: 5px; }
+.sync-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
+.sync-dot.error { background: var(--red); animation: none; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ADD BAR */
+.add-section { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 10px 14px; position: relative; }
+.add-row { display: flex; gap: 8px; align-items: center; }
+.add-input { flex: 1; background: var(--cream-dark); border: 1.5px solid var(--cream-border); border-radius: 12px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-dark); outline: none; transition: border-color 0.2s; }
+.add-input:focus { border-color: var(--amber); }
+.add-input::placeholder { color: var(--text-muted); }
+.icon-btn { width: 42px; height: 42px; border-radius: 12px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; transition: transform 0.1s; }
+.icon-btn:active { transform: scale(0.93); }
+.btn-add { background: var(--amber); color: #fff; font-size: 24px; font-weight: 300; }
+.btn-voice { background: var(--cobalt-light); color: var(--cobalt); border: 1px solid var(--cobalt-border); }
+.btn-voice.listening { background: #ffe0e0; color: var(--red); border-color: #f0b0b0; animation: pulse 0.8s infinite; }
+
+/* SUGGESTIONS */
+.suggestions { position: absolute; left: 14px; right: 14px; top: calc(100% - 2px); background: var(--cream); border: 1px solid var(--cream-border); border-radius: 0 0 14px 14px; z-index: 200; overflow: hidden; box-shadow: 0 8px 20px rgba(42,30,8,0.12); display: none; }
+.suggestions.show { display: block; }
+.sug-item { padding: 11px 14px; font-size: 14px; color: var(--text-dark); cursor: pointer; border-bottom: 0.5px solid var(--cream-border); display: flex; justify-content: space-between; align-items: center; transition: background 0.12s; }
+.sug-item:last-child { border-bottom: none; }
+.sug-item:active { background: var(--cream-dark); }
+.sug-left { display: flex; flex-direction: column; gap: 2px; }
+.sug-name { font-weight: 500; font-size: 14px; }
+.sug-sub { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.sug-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.sug-store { font-size: 11px; color: var(--cobalt); font-weight: 500; }
+.sug-price { font-size: 12px; color: var(--amber); font-weight: 600; }
+.sug-learned { font-size: 10px; color: var(--purple); font-weight: 600; letter-spacing: 0.04em; }
+
+/* SPECIALTY MODAL */
+.specialty-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.55); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
+.specialty-overlay.show { display: flex; }
+.specialty-modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
+@keyframes slideUp { from{transform:translateY(50px);opacity:0} to{transform:translateY(0);opacity:1} }
+.specialty-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 3px; }
+.specialty-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; }
+.specialty-list { display: flex; flex-direction: column; gap: 8px; max-height: 55vh; overflow-y: auto; padding-bottom: 4px; }
+.specialty-option { background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 12px; padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.15s, border-color 0.15s; position: relative; }
+.specialty-option.is-learned { border-color: var(--purple); background: var(--purple-light); }
+.specialty-option.is-learned::before { content: '★ Your usual'; position: absolute; top: -9px; left: 12px; background: var(--purple); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 8px; letter-spacing: 0.05em; }
+.specialty-option:active { background: var(--amber-light); border-color: var(--amber-border); }
+.spec-left { display: flex; flex-direction: column; gap: 2px; }
+.spec-name { font-size: 14px; font-weight: 500; color: var(--text-dark); }
+.spec-detail { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.spec-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+.spec-store { font-size: 11px; color: var(--cobalt); font-weight: 500; }
+.spec-price { font-size: 13px; color: var(--amber); font-weight: 600; }
+.spec-count { font-size: 10px; color: var(--purple); font-weight: 600; }
+.specialty-cancel { margin-top: 12px; width: 100%; padding: 12px; background: none; border: 1px solid var(--cream-border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-mid); cursor: pointer; }
+
+/* FAVORITES */
+.fav-section { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 10px 14px 12px; }
+.fav-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
+.fav-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
+.fav-row::-webkit-scrollbar { display: none; }
+.fav-pill { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 500; white-space: nowrap; cursor: pointer; flex-shrink: 0; transition: transform 0.1s; }
+.fav-pill:active { transform: scale(0.95); }
+.fav-pill.learned { background: var(--purple-light); color: var(--purple); border-color: #dcc4ea; }
+
+/* MAIN */
+.main { padding: 14px; }
+
+/* STORE CARDS */
+.store-card { background: var(--cream); border-radius: 16px; margin-bottom: 12px; border-top: 1px solid var(--cream-border); border-right: 1px solid var(--cream-border); border-bottom: 1px solid var(--cream-border); overflow: hidden; }
+.card-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; user-select: none; }
+.card-left { display: flex; align-items: center; gap: 9px; }
+.store-icon { width: 30px; height: 30px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.store-name { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; color: var(--text-dark); }
+.card-right { display: flex; align-items: center; gap: 8px; }
+.store-badge { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 10px; }
+.chevron { font-size: 11px; color: var(--text-muted); transition: transform 0.2s; }
+.store-card.collapsed .chevron { transform: rotate(-90deg); }
+.card-body { padding: 0 14px 12px; }
+.store-card.collapsed .card-body { display: none; }
+.card-divider { height: 0.5px; background: var(--cream-border); margin-bottom: 8px; }
+
+/* STORE COLORS */
+.store-aldi        { border-left: 4px solid #c47a10; }
+.store-aldi        .store-icon { background: #fff0c8; }
+.store-aldi        .store-badge { background: #fff0c8; color: #9a5a00; }
+.store-walmart     { border-left: 4px solid #1848a0; }
+.store-walmart     .store-icon { background: #e8f0fc; }
+.store-walmart     .store-badge { background: #e8f0fc; color: #1848a0; }
+.store-target      { border-left: 4px solid #a03050; }
+.store-target      .store-icon { background: #fdeef0; }
+.store-target      .store-badge { background: #fdeef0; color: #a03050; }
+.store-costco      { border-left: 4px solid #1a6a7a; }
+.store-costco      .store-icon { background: #e0f4f8; }
+.store-costco      .store-badge { background: #e0f4f8; color: #1a6a7a; }
+.store-giant-eagle { border-left: 4px solid #2d7a3a; }
+.store-giant-eagle .store-icon { background: #e8f5e4; }
+.store-giant-eagle .store-badge { background: #e8f5e4; color: #2d7a3a; }
+.store-amazon      { border-left: 4px solid #6a2a8a; }
+.store-amazon      .store-icon { background: #f0e4f8; }
+.store-amazon      .store-badge { background: #f0e4f8; color: #6a2a8a; }
+
+/* ITEMS */
+.item-row { display: flex; align-items: flex-start; padding: 7px 0; gap: 10px; border-bottom: 0.5px solid #f0e8d4; transition: opacity 0.5s; }
+.item-row:last-child { border-bottom: none; }
+.item-row.fading { opacity: 0; }
+.item-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--cream-border); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: background 0.2s, border-color 0.2s; font-size: 12px; color: #fff; }
+.item-check.checked { background: var(--green); border-color: var(--green); }
+.item-content { flex: 1; min-width: 0; }
+.item-name { font-size: 13px; color: var(--text-dark); line-height: 1.4; transition: color 0.3s; }
+.item-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
+.item-learned-tag { display: inline-block; font-size: 9px; color: var(--purple); font-weight: 700; letter-spacing: 0.04em; margin-top: 2px; }
+.item-row.done .item-name { text-decoration: line-through; color: var(--text-muted); }
+.item-price { font-size: 13px; font-weight: 600; color: var(--amber); flex-shrink: 0; padding-top: 1px; }
+.item-btns { display: flex; gap: 2px; flex-shrink: 0; }
+.item-btn { background: none; border: none; color: var(--text-muted); font-size: 15px; cursor: pointer; padding: 3px 5px; border-radius: 6px; transition: background 0.15s; }
+.item-btn:active { background: var(--cream-dark); color: var(--text-dark); }
+.item-btn.pin-btn.pinned { color: var(--purple); }
+
+/* EMPTY */
+.empty { text-align: center; padding: 52px 24px; }
+.empty-icon { font-size: 52px; margin-bottom: 14px; }
+.empty-title { font-family: 'Playfair Display', serif; font-size: 21px; color: var(--text-mid); margin-bottom: 8px; }
+.empty-sub { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+
+/* EDIT MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.5); z-index: 400; display: none; align-items: flex-end; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
+.modal-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 16px; }
+.modal-field { margin-bottom: 12px; }
+.modal-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+.modal-input, .modal-select { width: 100%; background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 10px; padding: 10px 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-dark); outline: none; appearance: none; }
+.modal-input:focus, .modal-select:focus { border-color: var(--amber); }
+.modal-actions { display: flex; gap: 8px; margin-top: 18px; }
+.modal-btn { flex: 1; padding: 12px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.1s; }
+.modal-btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--amber); color: #fff; }
+.btn-secondary { background: var(--cream-dark); color: var(--text-mid); border: 1px solid var(--cream-border); }
+.btn-danger { background: var(--red-light); color: var(--red); }
+.btn-pin { background: var(--purple-light); color: var(--purple); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: var(--cream); padding: 10px 22px; border-radius: 22px; font-size: 13px; font-weight: 500; z-index: 600; transition: transform 0.3s ease; white-space: nowrap; pointer-events: none; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="app-title">Smart<span>Cart</span></div>
+    <div class="total-badge" id="totalBadge">$0.00 est.</div>
+  </div>
+  <div class="header-sub">
+    <div class="sync-dot" id="syncDot"></div>
+    <span id="syncLabel">Connecting...</span>
+  </div>
+</div>
+
+<div class="add-section">
+  <div class="add-row">
+    <input class="add-input" id="addInput" type="text" placeholder="Add an item..." autocomplete="off" autocorrect="off" autocapitalize="words">
+    <button class="icon-btn btn-voice" id="voiceBtn">🎤</button>
+    <button class="icon-btn btn-add" id="addBtn">+</button>
+  </div>
+  <div class="suggestions" id="suggestions"></div>
+</div>
+
+<div class="fav-section">
+  <div class="fav-label">Quick Add — Favorites</div>
+  <div class="fav-row" id="favRow">
+    <span style="font-size:12px;color:var(--text-muted);font-style:italic;">Tap ★ on any item to save a favorite</span>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <div class="empty" id="emptyState">
+    <div class="empty-icon">🛒</div>
+    <div class="empty-title">Your cart is empty</div>
+    <div class="empty-sub">Start typing to add items.<br>SmartCart learns your preferences over time.</div>
+  </div>
+</div>
+
+<!-- Specialty Picker -->
+<div class="specialty-overlay" id="specialtyOverlay">
+  <div class="specialty-modal">
+    <div class="specialty-title" id="specialtyTitle">Choose a type</div>
+    <div class="specialty-sub" id="specialtySub">Select the one you want</div>
+    <div class="specialty-list" id="specialtyList"></div>
+    <button class="specialty-cancel" id="specialtyCancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <div class="modal-title">Edit Item</div>
+    <div class="modal-field">
+      <div class="modal-label">Item Name</div>
+      <input class="modal-input" id="editName" type="text">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Store Override</div>
+      <select class="modal-select" id="editStore">
+        <option value="Aldi">Aldi</option>
+        <option value="Walmart">Walmart</option>
+        <option value="Target">Target</option>
+        <option value="Costco">Costco</option>
+        <option value="Giant Eagle">Giant Eagle</option>
+        <option value="Amazon">Amazon</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Price</div>
+      <input class="modal-input" id="editPrice" type="text" placeholder="e.g. $3.29">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Note</div>
+      <input class="modal-input" id="editNote" type="text" placeholder="e.g. get the organic one">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn btn-danger" id="editDelete">Delete</button>
+      <button class="modal-btn btn-pin" id="editPin">☆ Pin</button>
+      <button class="modal-btn btn-secondary" id="editCancel">Cancel</button>
+      <button class="modal-btn btn-primary" id="editSave">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, onValue, push, set, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCll3iss7JSvyYXeyTsA4sLhwAMMT1GPL4",
+  authDomain: "smartcart-e3b7d.firebaseapp.com",
+  databaseURL: "https://smartcart-e3b7d-default-rtdb.firebaseio.com",
+  projectId: "smartcart-e3b7d",
+  storageBucket: "smartcart-e3b7d.firebasestorage.app",
+  messagingSenderId: "919377763258",
+  appId: "1:919377763258:web:988c1c6e5a801051505b83"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const db = getDatabase(fbApp);
+const itemsRef = ref(db, 'items');
+const favsRef  = ref(db, 'favorites');
+const mindRef  = ref(db, 'mind');
+
+// THRESHOLDS
+const LEARN_THRESHOLD   = 3; // purchases before auto-selecting
+const SKIP_THRESHOLD    = 5; // purchases before skipping picker entirely
+
+// STORE CONFIG
+const STORES = {
+  'Aldi':        { cls:'store-aldi',        emoji:'🛒' },
+  'Walmart':     { cls:'store-walmart',     emoji:'🏪' },
+  'Target':      { cls:'store-target',      emoji:'🎯' },
+  'Costco':      { cls:'store-costco',      emoji:'📦' },
+  'Giant Eagle': { cls:'store-giant-eagle', emoji:'🦅' },
+  'Amazon':      { cls:'store-amazon',      emoji:'📬' },
+};
+
+// ITEM DATABASE
+const ITEMS = {
+  'milk': [
+    { name:'Milk — Whole Gallon',       store:'Aldi', price:'$3.29', detail:'1 gallon, whole' },
+    { name:'Milk — 2% Gallon',          store:'Aldi', price:'$3.19', detail:'1 gallon, 2%' },
+    { name:'Milk — Skim Gallon',        store:'Aldi', price:'$3.09', detail:'1 gallon, skim' },
+    { name:'Milk — Half Gallon Whole',  store:'Aldi', price:'$2.09', detail:'half gallon, whole' },
+    { name:'Milk — Organic Whole',      store:'Giant Eagle', price:'$5.99', detail:'organic, 1 gallon' },
+    { name:'Milk — Fairlife Whole',     store:'Costco', price:'$9.99', detail:'2 pack, ultra-filtered' },
+    { name:'Milk — Almond Milk',        store:'Walmart', price:'$3.48', detail:'64 oz, unsweetened' },
+    { name:'Milk — Oat Milk',           store:'Target', price:'$4.99', detail:'52 oz' },
+  ],
+  'eggs': [
+    { name:'Eggs — Large Dozen',        store:'Aldi', price:'$2.89', detail:'12 ct, large' },
+    { name:'Eggs — XL Dozen',           store:'Walmart', price:'$3.28', detail:'12 ct, XL' },
+    { name:'Eggs — Free Range Dozen',   store:'Giant Eagle', price:'$4.99', detail:'free range, 12 ct' },
+    { name:'Eggs — Organic Dozen',      store:'Giant Eagle', price:'$5.49', detail:'organic, 12 ct' },
+    { name:'Eggs — 2 Dozen',            store:'Aldi', price:'$5.49', detail:'24 ct, large' },
+    { name:'Eggs — Cage Free Dozen',    store:'Aldi', price:'$3.49', detail:'cage free, 12 ct' },
+  ],
+  'bread': [
+    { name:'Bread — White Sandwich',    store:'Aldi', price:'$1.99', detail:'20 oz loaf' },
+    { name:'Bread — Whole Wheat',       store:'Aldi', price:'$2.19', detail:'20 oz loaf' },
+    { name:'Bread — Dave\'s Killer',    store:'Walmart', price:'$5.98', detail:'27 oz, whole grain' },
+    { name:'Bread — Sourdough Loaf',    store:'Giant Eagle', price:'$4.49', detail:'bakery, 24 oz' },
+    { name:'Bread — Artisan Baguette',  store:'Giant Eagle', price:'$2.99', detail:'bakery fresh' },
+    { name:'Bread — Brioche',           store:'Target', price:'$4.29', detail:'sliced brioche loaf' },
+    { name:'Bread — Gluten Free',       store:'Target', price:'$6.49', detail:'gluten free loaf' },
+  ],
+  'butter': [
+    { name:'Butter — Salted Sticks',    store:'Aldi', price:'$3.49', detail:'4 sticks, 1 lb' },
+    { name:'Butter — Unsalted Sticks',  store:'Aldi', price:'$3.49', detail:'4 sticks, 1 lb' },
+    { name:'Butter — Land O Lakes',     store:'Walmart', price:'$4.98', detail:'1 lb, salted' },
+    { name:'Butter — Kerrygold',        store:'Costco', price:'$9.99', detail:'3 pack, Irish grass-fed' },
+    { name:'Butter — Whipped',          store:'Target', price:'$3.99', detail:'8 oz tub' },
+  ],
+  'cheese': [
+    { name:'Cheese — Shredded Mozzarella', store:'Aldi', price:'$3.29', detail:'8 oz bag' },
+    { name:'Cheese — Shredded Cheddar',    store:'Aldi', price:'$3.29', detail:'8 oz bag' },
+    { name:'Cheese — Sliced American',     store:'Walmart', price:'$3.98', detail:'16 slices' },
+    { name:'Cheese — Block Sharp Cheddar', store:'Aldi', price:'$3.99', detail:'8 oz block' },
+    { name:'Cheese — Parmesan Shredded',   store:'Walmart', price:'$3.48', detail:'6 oz' },
+    { name:'Cheese — Cream Cheese',        store:'Aldi', price:'$2.49', detail:'8 oz block' },
+    { name:'Cheese — Feta Crumbles',       store:'Aldi', price:'$2.99', detail:'6 oz' },
+    { name:'Cheese — Costco 3lb Blend',    store:'Costco', price:'$11.99', detail:'3 lb bag, Mexican blend' },
+  ],
+  'yogurt': [
+    { name:'Yogurt — Greek Plain 32oz',  store:'Aldi', price:'$2.49', detail:'32 oz tub' },
+    { name:'Yogurt — Greek Vanilla 32oz',store:'Aldi', price:'$2.49', detail:'32 oz tub' },
+    { name:'Yogurt — Chobani Cup',       store:'Walmart', price:'$1.28', detail:'5.3 oz cup' },
+    { name:'Yogurt — Oikos Triple Zero', store:'Walmart', price:'$1.48', detail:'5.3 oz cup' },
+    { name:'Yogurt — Skyr Icelandic',    store:'Target', price:'$2.99', detail:'17.6 oz' },
+  ],
+  'chicken': [
+    { name:'Chicken — Boneless Breast',  store:'Aldi', price:'$2.99/lb', detail:'per lb, fresh' },
+    { name:'Chicken — Rotisserie',       store:'Costco', price:'$4.99', detail:'hot, ready to eat' },
+    { name:'Chicken — Thighs Boneless',  store:'Aldi', price:'$2.49/lb', detail:'per lb, fresh' },
+    { name:'Chicken — Wings',            store:'Costco', price:'$2.49/lb', detail:'party wings, bulk' },
+    { name:'Chicken — Tenderloins',      store:'Walmart', price:'$3.48/lb', detail:'per lb' },
+    { name:'Chicken — Frozen Breasts',   store:'Costco', price:'$2.29/lb', detail:'bulk frozen, 10 lb' },
+  ],
+  'coffee': [
+    { name:'Coffee — Folgers Canister',  store:'Walmart', price:'$8.98', detail:'30 oz, classic roast' },
+    { name:'Coffee — Kirkland Costco',   store:'Costco', price:'$14.99', detail:'3 lb bag, medium roast' },
+    { name:'Coffee — Aldi Breakfast',    store:'Aldi', price:'$5.99', detail:'12 oz, medium roast' },
+    { name:'Coffee — Starbucks Bag',     store:'Target', price:'$10.99', detail:'12 oz bag' },
+    { name:'Coffee — Cold Brew Bags',    store:'Walmart', price:'$6.98', detail:'makes 6 pitchers' },
+  ],
+  'pasta': [
+    { name:'Pasta — Spaghetti 1lb',      store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Penne 1lb',          store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Rotini 1lb',         store:'Walmart', price:'$1.18', detail:'16 oz box' },
+    { name:'Pasta — Fettuccine',         store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Gluten Free',        store:'Target', price:'$2.99', detail:'12 oz box' },
+  ],
+  'paper towels': [
+    { name:'Paper Towels — Bounty 6pk',  store:'Walmart', price:'$9.97', detail:'6 double rolls' },
+    { name:'Paper Towels — Costco 12pk', store:'Costco', price:'$22.99', detail:'12 triple rolls' },
+    { name:'Paper Towels — Aldi 2pk',    store:'Aldi', price:'$2.99', detail:'2 rolls' },
+    { name:'Paper Towels — Target Brand',store:'Target', price:'$7.99', detail:'6 rolls' },
+  ],
+  'toilet paper': [
+    { name:'Toilet Paper — Costco 30pk', store:'Costco', price:'$19.99', detail:'30 double rolls' },
+    { name:'Toilet Paper — Charmin 12pk',store:'Walmart', price:'$9.97', detail:'12 mega rolls' },
+    { name:'Toilet Paper — Aldi 6pk',    store:'Aldi', price:'$4.99', detail:'6 rolls' },
+    { name:'Toilet Paper — Cottonelle',  store:'Target', price:'$8.99', detail:'9 rolls' },
+  ],
+  'olive oil': [
+    { name:'Olive Oil — Costco 2L',      store:'Costco', price:'$11.99', detail:'2 liter, extra virgin' },
+    { name:'Olive Oil — Aldi 17oz',      store:'Aldi', price:'$4.49', detail:'17 oz, extra virgin' },
+    { name:'Olive Oil — Walmart 17oz',   store:'Walmart', price:'$4.98', detail:'17 oz, pure' },
+  ],
+  'dish soap': [
+    { name:'Dish Soap — Dawn Original',  store:'Target', price:'$3.47', detail:'19.4 oz' },
+    { name:'Dish Soap — Aldi Brand',     store:'Aldi', price:'$1.49', detail:'28 oz' },
+    { name:'Dish Soap — Costco Dawn 3pk',store:'Costco', price:'$9.99', detail:'3 pack bulk' },
+  ],
+  'shampoo': [
+    { name:'Shampoo — Dove Moisturizing',store:'Target', price:'$6.99', detail:'12 oz' },
+    { name:'Shampoo — Pantene Pro-V',    store:'Walmart', price:'$4.97', detail:'12.6 oz' },
+    { name:'Shampoo — Head & Shoulders', store:'Walmart', price:'$5.97', detail:'13.5 oz' },
+    { name:'Shampoo — Kirkland 2pk',     store:'Costco', price:'$12.99', detail:'2 x 25.4 oz' },
+  ],
+  'detergent': [
+    { name:'Laundry — Tide Costco',      store:'Costco', price:'$21.99', detail:'152 loads, HE' },
+    { name:'Laundry — Aldi Brand',       store:'Aldi', price:'$7.99', detail:'75 loads' },
+    { name:'Laundry — Arm & Hammer',     store:'Walmart', price:'$8.97', detail:'100 loads' },
+    { name:'Laundry — Tide Pods 42ct',   store:'Target', price:'$14.99', detail:'42 pods' },
+  ],
+  'rice': [
+    { name:'Rice — White Long Grain 5lb',store:'Walmart', price:'$4.98', detail:'5 lb bag' },
+    { name:'Rice — Jasmine 5lb',         store:'Walmart', price:'$5.98', detail:'5 lb bag' },
+    { name:'Rice — Brown Long Grain',    store:'Aldi', price:'$2.99', detail:'2 lb bag' },
+    { name:'Rice — Costco Jasmine 25lb', store:'Costco', price:'$18.99', detail:'25 lb bag, bulk' },
+    { name:'Rice — Microwavable Cups 6pk',store:'Target', price:'$3.99', detail:'ready rice' },
+  ],
+  'apples': [
+    { name:'Apples — Gala 3lb Bag',      store:'Aldi', price:'$3.49', detail:'3 lb bag' },
+    { name:'Apples — Honeycrisp',        store:'Giant Eagle', price:'$1.99/lb', detail:'per pound' },
+    { name:'Apples — Fuji 3lb Bag',      store:'Walmart', price:'$3.98', detail:'3 lb bag' },
+    { name:'Apples — Granny Smith',      store:'Aldi', price:'$3.49', detail:'3 lb bag' },
+    { name:'Apples — Cosmic Crisp',      store:'Giant Eagle', price:'$2.49/lb', detail:'per pound' },
+  ],
+  'bananas': [
+    { name:'Bananas — Bunch',            store:'Aldi', price:'$0.49/lb', detail:'approx 5-7 bananas' },
+    { name:'Bananas — Organic',          store:'Giant Eagle', price:'$0.79/lb', detail:'organic' },
+    { name:'Plantains',                  store:'Walmart', price:'$0.69/lb', detail:'green plantains' },
+  ],
+  // SIMPLE ITEMS
+  'lettuce':    { name:'Lettuce — Romaine Hearts 3pk', store:'Aldi', price:'$2.49' },
+  'tomatoes':   { name:'Tomatoes — Roma 3lb',          store:'Aldi', price:'$2.99' },
+  'onions':     { name:'Onions — Yellow 3lb',          store:'Aldi', price:'$1.99' },
+  'potatoes':   { name:'Potatoes — Russet 5lb',        store:'Aldi', price:'$3.49' },
+  'carrots':    { name:'Carrots — Baby 1lb',            store:'Aldi', price:'$1.29' },
+  'spinach':    { name:'Spinach — Baby 5oz',            store:'Aldi', price:'$2.49' },
+  'broccoli':   { name:'Broccoli — Crown',              store:'Aldi', price:'$1.49' },
+  'cereal':     { name:'Cereal — Cheerios 18oz',        store:'Walmart', price:'$3.48' },
+  'oats':       { name:'Oats — Old Fashioned 42oz',     store:'Walmart', price:'$4.98' },
+  'sugar':      { name:'Sugar — White Granulated 4lb',  store:'Walmart', price:'$2.98' },
+  'flour':      { name:'Flour — All Purpose 5lb',       store:'Walmart', price:'$2.98' },
+  'juice':      { name:'OJ — Tropicana 52oz',           store:'Aldi', price:'$3.29' },
+  'chips':      { name:'Chips — Lays Classic 8oz',      store:'Walmart', price:'$3.98' },
+  'crackers':   { name:'Crackers — Ritz 13.7oz',        store:'Walmart', price:'$3.48' },
+  'salmon':     { name:'Salmon — Atlantic Fillet',      store:'Costco', price:'$9.99/lb' },
+  'steak':      { name:'Steak — Ribeye',                store:'Costco', price:'$12.99/lb' },
+  'almonds':    { name:'Almonds — Kirkland 3lb',        store:'Costco', price:'$12.99' },
+  'batteries':  { name:'Batteries — AA 48pk',           store:'Amazon', price:'$12.99' },
+  'vitamins':   { name:'Vitamins — Multivitamin',       store:'Costco', price:'$14.99' },
+  'protein':    { name:'Protein Powder — Whey 5lb',     store:'Amazon', price:'$34.99' },
+  'deodorant':  { name:'Deodorant — Degree 2pk',        store:'Target', price:'$7.99' },
+  'toothpaste': { name:'Toothpaste — Colgate Total',    store:'Target', price:'$3.99' },
+};
+
+// Build search list
+const SEARCH_LIST = [];
+for (const [kw, val] of Object.entries(ITEMS)) {
+  if (Array.isArray(val)) {
+    SEARCH_LIST.push({ keyword:kw, displayName: kw.charAt(0).toUpperCase()+kw.slice(1), store:val[0].store, price:val[0].price, specialty:true, variants:val });
+  } else {
+    SEARCH_LIST.push({ keyword:kw, displayName: val.name, store:val.store, price:val.price, specialty:false, item:val });
+  }
+}
+
+// Mind key helper — normalize item name to a safe firebase key
+function mindKey(name) {
+  return name.toLowerCase().split('—')[0].trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+
+// ─── STATE ────────────────────────────────────────────────────
+let items={}, favorites={}, mind={}, editingId=null;
+
+// ─── FIREBASE LISTENERS ───────────────────────────────────────
+onValue(itemsRef, snap => {
+  items = snap.val()||{};
+  renderAll();
+  document.getElementById('syncDot').classList.remove('error');
+  document.getElementById('syncLabel').textContent =
+    new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+' · Pittsburgh';
+}, () => {
+  document.getElementById('syncDot').classList.add('error');
+  document.getElementById('syncLabel').textContent = 'Connection error — check Firebase rules';
+});
+
+onValue(favsRef, snap => { favorites=snap.val()||{}; renderFavs(); });
+onValue(mindRef, snap => { mind=snap.val()||{}; });
+
+// ─── THE MIND — LEARNING FUNCTIONS ───────────────────────────
+function learnItem(item) {
+  const k = mindKey(item.name);
+  const now = Date.now();
+  const existing = mind[k] || {};
+  const newCount = (existing.count||0) + 1;
+
+  // Write history entry
+  const histRef = ref(db, `mind/${k}/history`);
+  push(histRef, { store:item.store, price:item.price, date:now });
+
+  // Update top-level mind entry
+  const entry = {
+    name:       item.name,
+    brand:      extractBrand(item.name),
+    store:      item.store,
+    price:      item.price,
+    count:      newCount,
+    last_bought: now,
+    confirmed:  existing.confirmed||false,
+  };
+  if (existing.note) entry.note = existing.note;
+  set(ref(db,`mind/${k}`), { ...entry });
+}
+
+function pinItem(item) {
+  const k = mindKey(item.name);
+  const existing = mind[k]||{};
+  set(ref(db,`mind/${k}`), {
+    ...existing,
+    name:      item.name,
+    brand:     extractBrand(item.name),
+    store:     item.store,
+    price:     item.price,
+    confirmed: true,
+    count:     Math.max(existing.count||0, SKIP_THRESHOLD),
+    last_bought: Date.now(),
+  });
+  showToast('📌 Pinned as your go-to');
+}
+
+function extractBrand(name) {
+  // Pull brand from "Item — Brand Detail" format
+  const parts = name.split('—');
+  if (parts.length > 1) return parts[1].trim().split(' ')[0];
+  return name.split(' ')[0];
+}
+
+function getMindEntry(keyword) {
+  // Find mind entry matching a keyword
+  for (const [k, entry] of Object.entries(mind)) {
+    if (k.includes(keyword) || (entry.name||'').toLowerCase().includes(keyword)) return entry;
+  }
+  return null;
+}
+
+// ─── ADD ITEM ─────────────────────────────────────────────────
+function addItem(name, store, price, note) {
+  if (!name.trim()) return;
+  push(itemsRef, { name:name.trim(), store, price, note:note||'', done:false, added:Date.now() });
+  showToast('Added to '+store);
+}
+
+// ─── SMART RESOLVE: check mind first, then database ──────────
+function resolveAndAdd(keyword, entry) {
+  const mindEntry = getMindEntry(keyword);
+
+  // If mind knows this item and count >= SKIP_THRESHOLD → add instantly
+  if (mindEntry && (mindEntry.count >= SKIP_THRESHOLD || mindEntry.confirmed)) {
+    addItem(mindEntry.name, mindEntry.store, mindEntry.price, '');
+    return;
+  }
+
+  // If specialty with mind preference → open picker but highlight their usual
+  if (entry.specialty) {
+    openSpecialty(entry, mindEntry);
+    return;
+  }
+
+  // Simple item
+  addItem(entry.item.name, entry.item.store, entry.item.price, '');
+}
+
+// ─── RENDER ───────────────────────────────────────────────────
+function renderAll() {
+  const main = document.getElementById('main');
+  const empty = document.getElementById('emptyState');
+  const activeItems = Object.entries(items).filter(([,v])=>!v.done);
+  main.querySelectorAll('.store-card').forEach(c=>c.remove());
+
+  if (!activeItems.length) {
+    empty.style.display='block';
+    document.getElementById('totalBadge').textContent='$0.00 est.';
+    return;
+  }
+  empty.style.display='none';
+
+  const byStore={};
+  let total=0;
+  activeItems.forEach(([id,item])=>{
+    if(!byStore[item.store]) byStore[item.store]=[];
+    byStore[item.store].push([id,item]);
+    const p=parseFloat((item.price||'0').replace(/[^0-9.]/g,''));
+    if(!isNaN(p)) total+=p;
+  });
+  document.getElementById('totalBadge').textContent='$'+total.toFixed(2)+' est.';
+
+  Object.entries(byStore).forEach(([store,storeItems])=>{
+    const cfg=STORES[store]||{cls:'store-walmart',emoji:'🏪'};
+    let sub=0;
+    storeItems.forEach(([,it])=>{ const p=parseFloat((it.price||'0').replace(/[^0-9.]/g,'')); if(!isNaN(p)) sub+=p; });
+    const mk = mindKey(storeItems[0][1].name);
+    const card=document.createElement('div');
+    card.className=`store-card ${cfg.cls}`;
+    card.innerHTML=`
+      <div class="card-header">
+        <div class="card-left">
+          <div class="store-icon">${cfg.emoji}</div>
+          <span class="store-name">${store}</span>
+        </div>
+        <div class="card-right">
+          <span class="store-badge">${storeItems.length} item${storeItems.length>1?'s':''} · $${sub.toFixed(2)}</span>
+          <span class="chevron">▾</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-divider"></div>
+        ${storeItems.map(([id,it])=>{
+          const mk2=mindKey(it.name);
+          const me=mind[mk2];
+          const isLearned=me&&me.count>=LEARN_THRESHOLD;
+          return `<div class="item-row" id="row-${id}">
+            <div class="item-check" data-id="${id}"></div>
+            <div class="item-content">
+              <div class="item-name">${it.name}</div>
+              ${it.note?`<div class="item-note">${it.note}</div>`:''}
+              ${isLearned?`<div class="item-learned-tag">★ YOUR USUAL</div>`:''}
+            </div>
+            <span class="item-price">${it.price||''}</span>
+            <div class="item-btns">
+              <button class="item-btn" data-edit="${id}">✎</button>
+              <button class="item-btn pin-btn${me&&me.confirmed?' pinned':''}" data-pin="${id}" title="Pin as go-to">📌</button>
+              <button class="item-btn" data-fav="${id}">★</button>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+
+    card.querySelector('.card-header').addEventListener('click',()=>card.classList.toggle('collapsed'));
+
+    // Check off → triggers learning
+    card.querySelectorAll('.item-check').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const id=btn.dataset.id;
+        const row=document.getElementById('row-'+id);
+        const item=items[id];
+        row.classList.add('done');
+        btn.classList.add('checked');
+        btn.textContent='✓';
+        // Learn from this purchase
+        if(item) learnItem(item);
+        setTimeout(()=>{
+          row.classList.add('fading');
+          setTimeout(()=>update(ref(db,'items/'+id),{done:true}),500);
+        },1200);
+      });
+    });
+
+    // Pin as go-to
+    card.querySelectorAll('[data-pin]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const item=items[btn.dataset.pin];
+        if(item){ pinItem(item); btn.classList.add('pinned'); }
+      });
+    });
+
+    // Edit
+    card.querySelectorAll('[data-edit]').forEach(btn=>{
+      btn.addEventListener('click',e=>{e.stopPropagation();openEdit(btn.dataset.edit);});
+    });
+
+    // Favorite
+    card.querySelectorAll('[data-fav]').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.stopPropagation();
+        const it=items[btn.dataset.fav];
+        if(it){
+          const k=it.name.toLowerCase().replace(/\W+/g,'-');
+          set(ref(db,'favorites/'+k),{name:it.name,store:it.store,price:it.price,learned:!!(mind[mindKey(it.name)]&&mind[mindKey(it.name)].count>=LEARN_THRESHOLD)});
+          showToast('⭐ Saved to favorites');
+        }
+      });
+    });
+
+    main.appendChild(card);
+  });
+}
+
+function renderFavs() {
+  const row=document.getElementById('favRow');
+  const entries=Object.entries(favorites);
+  if(!entries.length){
+    row.innerHTML='<span style="font-size:12px;color:var(--text-muted);font-style:italic;">Tap ★ on any item to save a favorite</span>';
+    return;
+  }
+  row.innerHTML=entries.map(([k,f])=>
+    `<span class="fav-pill${f.learned?' learned':''}" data-k="${k}">${f.learned?'★ ':''}${f.name}</span>`
+  ).join('');
+  row.querySelectorAll('.fav-pill').forEach(pill=>{
+    pill.addEventListener('click',()=>{
+      const f=favorites[pill.dataset.k];
+      if(f) addItem(f.name,f.store,f.price,'');
+    });
+  });
+}
+
+// ─── SEARCH ───────────────────────────────────────────────────
+const addInput=document.getElementById('addInput');
+const sugBox=document.getElementById('suggestions');
+
+addInput.addEventListener('input',()=>{
+  const q=addInput.value.trim().toLowerCase();
+  if(q.length<1){sugBox.classList.remove('show');return;}
+  const matches=SEARCH_LIST.filter(s=>s.keyword.startsWith(q)||s.displayName.toLowerCase().startsWith(q)).slice(0,6);
+  if(!matches.length){sugBox.classList.remove('show');return;}
+
+  sugBox.innerHTML=matches.map(m=>{
+    const me=getMindEntry(m.keyword);
+    const isLearned=me&&(me.count>=LEARN_THRESHOLD||me.confirmed);
+    const willSkip=me&&(me.count>=SKIP_THRESHOLD||me.confirmed);
+    return `<div class="sug-item" data-kw="${m.keyword}">
+      <div class="sug-left">
+        <span class="sug-name">${m.keyword.charAt(0).toUpperCase()+m.keyword.slice(1)}</span>
+        ${willSkip?'<span class="sug-sub" style="color:var(--purple)">★ Adding your usual instantly</span>':
+          isLearned?'<span class="sug-sub" style="color:var(--purple)">★ Your usual shown first</span>':
+          m.specialty?'<span class="sug-sub">Multiple types — tap to choose</span>':''}
+      </div>
+      <div class="sug-right">
+        ${isLearned?`<span class="sug-learned">YOUR USUAL</span>`:''}
+        <span class="sug-store">${me&&isLearned?me.store:m.store}</span>
+        <span class="sug-price">${me&&isLearned?me.price:m.price}</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  sugBox.querySelectorAll('.sug-item').forEach(el=>{
+    el.addEventListener('click',()=>{
+      const entry=SEARCH_LIST.find(s=>s.keyword===el.dataset.kw);
+      if(!entry)return;
+      addInput.value='';
+      sugBox.classList.remove('show');
+      resolveAndAdd(entry.keyword, entry);
+    });
+  });
+  sugBox.classList.add('show');
+});
+
+function handleAdd() {
+  const val=addInput.value.trim();
+  if(!val)return;
+  addInput.value='';
+  sugBox.classList.remove('show');
+  const lower=val.toLowerCase();
+  const entry=SEARCH_LIST.find(s=>lower.includes(s.keyword)||s.keyword.includes(lower));
+  if(entry){ resolveAndAdd(entry.keyword,entry); return; }
+  // Unknown item — add with smart defaults
+  const store='Walmart', price='~$5.00';
+  addItem(val,store,price,'');
+}
+
+document.getElementById('addBtn').addEventListener('click',handleAdd);
+addInput.addEventListener('keydown',e=>{ if(e.key==='Enter') handleAdd(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.add-section')) sugBox.classList.remove('show'); });
+
+// ─── SPECIALTY PICKER ─────────────────────────────────────────
+function openSpecialty(entry, mindEntry) {
+  document.getElementById('specialtyTitle').textContent = entry.keyword.charAt(0).toUpperCase()+entry.keyword.slice(1);
+  document.getElementById('specialtySub').textContent = mindEntry&&mindEntry.count>=LEARN_THRESHOLD
+    ? 'Your usual is highlighted — or pick a different type'
+    : 'Choose the type you want';
+
+  const list=document.getElementById('specialtyList');
+  // Sort: learned item first if exists
+  let variants=[...entry.variants];
+  if(mindEntry&&mindEntry.name) {
+    variants.sort((a,b)=>{
+      const aMatch=a.name===mindEntry.name?-1:0;
+      const bMatch=b.name===mindEntry.name?1:0;
+      return aMatch+bMatch;
+    });
+  }
+
+  list.innerHTML=variants.map((v,i)=>{
+    const isUsual=mindEntry&&v.name===mindEntry.name;
+    const count=isUsual?mindEntry.count:0;
+    return `<div class="specialty-option${isUsual?' is-learned':''}" data-name="${v.name}" data-store="${v.store}" data-price="${v.price}" data-detail="${v.detail||''}">
+      <div class="spec-left">
+        <span class="spec-name">${v.name.split('—')[1]?v.name.split('—')[1].trim():v.name}</span>
+        ${v.detail?`<span class="spec-detail">${v.detail}</span>`:''}
+      </div>
+      <div class="spec-right">
+        <span class="spec-store">${v.store}</span>
+        <span class="spec-price">${v.price}</span>
+        ${count>0?`<span class="spec-count">bought ${count}×</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.specialty-option').forEach(opt=>{
+    opt.addEventListener('click',()=>{
+      addItem(opt.dataset.name, opt.dataset.store, opt.dataset.price, opt.dataset.detail||'');
+      document.getElementById('specialtyOverlay').classList.remove('show');
+    });
+  });
+  document.getElementById('specialtyOverlay').classList.add('show');
+}
+
+document.getElementById('specialtyCancel').addEventListener('click',()=>document.getElementById('specialtyOverlay').classList.remove('show'));
+document.getElementById('specialtyOverlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('specialtyOverlay')) document.getElementById('specialtyOverlay').classList.remove('show');
+});
+
+// ─── VOICE ────────────────────────────────────────────────────
+const voiceBtn=document.getElementById('voiceBtn');
+if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const rec=new SR();
+  rec.continuous=false; rec.interimResults=false;
+  rec.onresult=e=>{ const t=e.results[0][0].transcript; addInput.value=t; addInput.dispatchEvent(new Event('input')); };
+  rec.onend=()=>voiceBtn.classList.remove('listening');
+  voiceBtn.addEventListener('click',()=>{
+    if(voiceBtn.classList.contains('listening')) rec.stop();
+    else { voiceBtn.classList.add('listening'); rec.start(); }
+  });
+} else { voiceBtn.style.opacity='0.35'; }
+
+// ─── EDIT MODAL ───────────────────────────────────────────────
+function openEdit(id) {
+  editingId=id;
+  const it=items[id];
+  const mk=mindKey(it.name);
+  const me=mind[mk];
+  document.getElementById('editName').value=it.name;
+  document.getElementById('editStore').value=it.store;
+  document.getElementById('editPrice').value=it.price||'';
+  document.getElementById('editNote').value=it.note||'';
+  const pinBtn=document.getElementById('editPin');
+  pinBtn.textContent=me&&me.confirmed?'📌 Pinned':'📌 Pin as go-to';
+  document.getElementById('editModal').classList.add('show');
+}
+
+document.getElementById('editSave').addEventListener('click',()=>{
+  if(!editingId)return;
+  update(ref(db,'items/'+editingId),{
+    name:document.getElementById('editName').value,
+    store:document.getElementById('editStore').value,
+    price:document.getElementById('editPrice').value,
+    note:document.getElementById('editNote').value,
+  });
+  document.getElementById('editModal').classList.remove('show');
+  showToast('Item updated');
+});
+
+document.getElementById('editPin').addEventListener('click',()=>{
+  if(!editingId)return;
+  const it=items[editingId];
+  const overrideStore=document.getElementById('editStore').value;
+  const overridePrice=document.getElementById('editPrice').value;
+  pinItem({...it, store:overrideStore, price:overridePrice});
+  document.getElementById('editModal').classList.remove('show');
+});
+
+document.getElementById('editDelete').addEventListener('click',()=>{
+  if(!editingId)return;
+  remove(ref(db,'items/'+editingId));
+  document.getElementById('editModal').classList.remove('show');
+  showToast('Item removed');
+});
+
+document.getElementById('editCancel').addEventListener('click',()=>document.getElementById('editModal').classList.remove('show'));
+document.getElementById('editModal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('editModal')) document.getElementById('editModal').classList.remove('show');
+});
+
+// ─── TOAST ────────────────────────────────────────────────────
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+</script>
+</body>
+</html>

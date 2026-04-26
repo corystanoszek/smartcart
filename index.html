@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Smart Cart">
 <title>Smart Cart</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root {
   --cream: #fffcf4;
@@ -32,18 +33,55 @@
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-height: 100vh; color: var(--text-dark); overflow-x: hidden; }
 
-/* HEADER */
+/* ── AUTH SCREEN ── */
+.auth-screen { position: fixed; inset: 0; background: var(--cream); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+.auth-screen.hidden { display: none; }
+.auth-logo { font-family: 'Playfair Display', serif; font-size: 42px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+.auth-logo span { color: var(--amber); }
+.auth-tagline { font-size: 13px; color: var(--text-muted); margin-bottom: 52px; text-align: center; }
+.auth-card { background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 20px; padding: 28px 24px; width: 100%; max-width: 340px; text-align: center; }
+.auth-card-title { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--text-dark); margin-bottom: 6px; }
+.auth-card-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
+.google-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 13px 20px; background: #fff; border: 1.5px solid var(--cream-border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--text-dark); cursor: pointer; transition: box-shadow 0.2s, transform 0.1s; box-shadow: 0 1px 4px rgba(42,30,8,0.08); }
+.google-btn:active { transform: scale(0.97); }
+.google-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+/* ── HOUSEHOLD SETUP ── */
+.setup-screen { position: fixed; inset: 0; background: var(--cream); z-index: 999; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+.setup-screen.hidden { display: none; }
+.setup-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--text-dark); margin-bottom: 8px; text-align: center; }
+.setup-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 32px; text-align: center; line-height: 1.6; }
+.setup-card { background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 20px; padding: 24px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 12px; }
+.setup-btn { width: 100%; padding: 14px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.1s; }
+.setup-btn:active { transform: scale(0.97); }
+.setup-btn-primary { background: var(--amber); color: #fff; }
+.setup-btn-secondary { background: var(--cream); border: 1.5px solid var(--cream-border); color: var(--text-mid); }
+.setup-divider { text-align: center; font-size: 11px; color: var(--text-muted); }
+.setup-input { width: 100%; background: var(--cream); border: 1.5px solid var(--cream-border); border-radius: 10px; padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-dark); outline: none; }
+.setup-input:focus { border-color: var(--amber); }
+.invite-link-box { background: var(--cobalt-light); border: 1px solid var(--cobalt-border); border-radius: 10px; padding: 11px 13px; font-size: 12px; color: var(--cobalt); word-break: break-all; line-height: 1.5; }
+.invite-copy-btn { width: 100%; padding: 11px; border-radius: 10px; background: var(--cobalt); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+/* ── HEADER ── */
 .header { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 14px 18px 10px; position: sticky; top: 0; z-index: 100; }
 .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
 .app-title { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text-dark); letter-spacing: -0.5px; }
 .app-title span { color: var(--amber); }
+.header-right { display: flex; align-items: center; gap: 8px; }
 .total-badge { background: var(--green-light); color: var(--green); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 20px; border: 1px solid #c4e0c8; }
+.header-actions { display: flex; gap: 6px; align-items: center; }
+.hdr-btn { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px 6px; border-radius: 8px; color: var(--text-mid); transition: background 0.15s; }
+.hdr-btn:active { background: var(--cream-dark); }
 .header-sub { font-size: 11px; color: var(--text-muted); font-weight: 300; display: flex; align-items: center; gap: 5px; }
 .sync-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
 .sync-dot.error { background: var(--red); animation: none; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.user-avatars { display: flex; gap: -4px; }
+.user-avatar { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--cream); object-fit: cover; margin-left: -4px; }
+.user-avatar:first-child { margin-left: 0; }
+.user-avatar-placeholder { width: 24px; height: 24px; border-radius: 50%; background: var(--amber-light); border: 2px solid var(--cream); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--amber); margin-left: -4px; }
 
-/* ADD BAR */
+/* ── ADD BAR ── */
 .add-section { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 10px 14px; position: relative; }
 .add-row { display: flex; gap: 8px; align-items: center; }
 .add-input { flex: 1; background: var(--cream-dark); border: 1.5px solid var(--cream-border); border-radius: 12px; padding: 10px 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-dark); outline: none; transition: border-color 0.2s; }
@@ -55,7 +93,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .btn-voice { background: var(--cobalt-light); color: var(--cobalt); border: 1px solid var(--cobalt-border); }
 .btn-voice.listening { background: #ffe0e0; color: var(--red); border-color: #f0b0b0; animation: pulse 0.8s infinite; }
 
-/* SUGGESTIONS */
+/* ── SUGGESTIONS ── */
 .suggestions { position: absolute; left: 14px; right: 14px; top: calc(100% - 2px); background: var(--cream); border: 1px solid var(--cream-border); border-radius: 0 0 14px 14px; z-index: 200; overflow: hidden; box-shadow: 0 8px 20px rgba(42,30,8,0.12); display: none; }
 .suggestions.show { display: block; }
 .sug-item { padding: 11px 14px; font-size: 14px; color: var(--text-dark); cursor: pointer; border-bottom: 0.5px solid var(--cream-border); display: flex; justify-content: space-between; align-items: center; transition: background 0.12s; }
@@ -69,7 +107,28 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .sug-price { font-size: 12px; color: var(--amber); font-weight: 600; }
 .sug-learned { font-size: 10px; color: var(--purple); font-weight: 600; letter-spacing: 0.04em; }
 
-/* SPECIALTY MODAL */
+/* ── UNKNOWN ITEM DRAWER ── */
+.unknown-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.55); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
+.unknown-overlay.show { display: flex; }
+.unknown-modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
+.unknown-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 3px; }
+.unknown-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.unknown-name-input { width: 100%; background: var(--cream-dark); border: 1.5px solid var(--cream-border); border-radius: 10px; padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--text-dark); outline: none; margin-bottom: 14px; }
+.unknown-name-input:focus { border-color: var(--amber); }
+.unknown-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.store-pick-btn { padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--cream-border); background: var(--cream-dark); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: all 0.15s; text-align: center; }
+.store-pick-btn.selected { background: var(--amber-light); border-color: var(--amber); color: var(--amber); font-weight: 600; }
+.store-pick-btn:active { transform: scale(0.97); }
+.unknown-price-input { width: 100%; background: var(--cream-dark); border: 1.5px solid var(--cream-border); border-radius: 10px; padding: 11px 13px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-dark); outline: none; margin-bottom: 16px; }
+.unknown-price-input:focus { border-color: var(--amber); }
+.unknown-actions { display: flex; gap: 8px; }
+.unknown-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.1s; }
+.unknown-btn:active { transform: scale(0.97); }
+.unknown-btn-add { background: var(--amber); color: #fff; }
+.unknown-btn-skip { background: var(--cream-dark); border: 1px solid var(--cream-border); color: var(--text-mid); }
+
+/* ── SPECIALTY MODAL ── */
 .specialty-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.55); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
 .specialty-overlay.show { display: flex; }
 .specialty-modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
@@ -90,7 +149,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .spec-count { font-size: 10px; color: var(--purple); font-weight: 600; }
 .specialty-cancel { margin-top: 12px; width: 100%; padding: 12px; background: none; border: 1px solid var(--cream-border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-mid); cursor: pointer; }
 
-/* FAVORITES */
+/* ── FAVORITES ── */
 .fav-section { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 10px 14px 12px; }
 .fav-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px; }
 .fav-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: none; }
@@ -99,10 +158,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .fav-pill:active { transform: scale(0.95); }
 .fav-pill.learned { background: var(--purple-light); color: var(--purple); border-color: #dcc4ea; }
 
-/* MAIN */
+/* ── MAIN ── */
 .main { padding: 14px; }
 
-/* STORE CARDS */
+/* ── STORE CARDS ── */
 .store-card { background: var(--cream); border-radius: 16px; margin-bottom: 12px; border-top: 1px solid var(--cream-border); border-right: 1px solid var(--cream-border); border-bottom: 1px solid var(--cream-border); overflow: hidden; }
 .card-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; cursor: pointer; user-select: none; }
 .card-left { display: flex; align-items: center; gap: 9px; }
@@ -116,7 +175,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .store-card.collapsed .card-body { display: none; }
 .card-divider { height: 0.5px; background: var(--cream-border); margin-bottom: 8px; }
 
-/* STORE COLORS */
+/* ── STORE COLORS ── */
 .store-aldi        { border-left: 4px solid #c47a10; }
 .store-aldi        .store-icon { background: #fff0c8; }
 .store-aldi        .store-badge { background: #fff0c8; color: #9a5a00; }
@@ -136,12 +195,14 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .store-amazon      .store-icon { background: #f0e4f8; }
 .store-amazon      .store-badge { background: #f0e4f8; color: #6a2a8a; }
 
-/* ITEMS */
+/* ── ITEMS ── */
 .item-row { display: flex; align-items: flex-start; padding: 7px 0; gap: 10px; border-bottom: 0.5px solid #f0e8d4; transition: opacity 0.5s; }
 .item-row:last-child { border-bottom: none; }
 .item-row.fading { opacity: 0; }
 .item-check { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--cream-border); flex-shrink: 0; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: background 0.2s, border-color 0.2s; font-size: 12px; color: #fff; }
 .item-check.checked { background: var(--green); border-color: var(--green); }
+.item-avatar { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; flex-shrink: 0; margin-top: 2px; border: 1.5px solid var(--cream); }
+.item-avatar-placeholder { width: 20px; height: 20px; border-radius: 50%; background: var(--amber-light); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: var(--amber); flex-shrink: 0; margin-top: 2px; border: 1.5px solid var(--cream); }
 .item-content { flex: 1; min-width: 0; }
 .item-name { font-size: 13px; color: var(--text-dark); line-height: 1.4; transition: color 0.3s; }
 .item-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
@@ -153,13 +214,74 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .item-btn:active { background: var(--cream-dark); color: var(--text-dark); }
 .item-btn.pin-btn.pinned { color: var(--purple); }
 
-/* EMPTY */
+/* ── RECEIPT IMPORT MODAL ── */
+.receipt-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.55); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
+.receipt-overlay.show { display: flex; }
+.receipt-modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
+.receipt-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 600; color: var(--text-dark); margin-bottom: 3px; }
+.receipt-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+.receipt-store-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+.receipt-store-btn { padding: 10px 12px; border-radius: 10px; border: 1.5px solid var(--cream-border); background: var(--cream-dark); font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--text-dark); cursor: pointer; transition: all 0.15s; text-align: center; }
+.receipt-store-btn.selected { background: var(--amber-light); border-color: var(--amber); color: var(--amber); font-weight: 600; }
+.receipt-upload-area { border: 2px dashed var(--cream-border); border-radius: 14px; padding: 28px 20px; text-align: center; cursor: pointer; margin-bottom: 16px; transition: border-color 0.2s; }
+.receipt-upload-area:hover { border-color: var(--amber); }
+.receipt-upload-area.has-file { border-color: var(--green); background: var(--green-light); }
+.receipt-upload-icon { font-size: 32px; margin-bottom: 8px; }
+.receipt-upload-text { font-size: 13px; color: var(--text-mid); }
+.receipt-upload-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.receipt-file-input { display: none; }
+.receipt-processing { display: none; text-align: center; padding: 20px; }
+.receipt-processing.show { display: block; }
+.receipt-spinner { width: 36px; height: 36px; border: 3px solid var(--cream-border); border-top-color: var(--amber); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.receipt-processing-text { font-size: 13px; color: var(--text-mid); }
+
+/* ── UNMATCHED ITEMS REVIEW ── */
+.unmatched-section { display: none; margin-bottom: 16px; }
+.unmatched-section.show { display: block; }
+.unmatched-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.unmatched-item { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 0.5px solid var(--cream-border); }
+.unmatched-name { flex: 1; font-size: 13px; color: var(--text-dark); }
+.unmatched-store-select { background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 8px; padding: 5px 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-dark); outline: none; }
+.receipt-actions { display: flex; gap: 8px; }
+.receipt-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.1s; }
+.receipt-btn:active { transform: scale(0.97); }
+.receipt-btn-primary { background: var(--amber); color: #fff; }
+.receipt-btn-cancel { background: var(--cream-dark); border: 1px solid var(--cream-border); color: var(--text-mid); }
+
+/* ── TRIP END MODAL ── */
+.trip-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.55); z-index: 500; display: none; align-items: flex-end; justify-content: center; }
+.trip-overlay.show { display: flex; }
+.trip-modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
+.trip-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 600; color: var(--text-dark); margin-bottom: 4px; }
+.trip-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
+.trip-summary-box { background: var(--cream-dark); border: 1px solid var(--cream-border); border-radius: 12px; padding: 14px; margin-bottom: 16px; max-height: 200px; overflow-y: auto; }
+.trip-summary-store { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; margin-top: 10px; }
+.trip-summary-store:first-child { margin-top: 0; }
+.trip-summary-item { font-size: 12px; color: var(--text-dark); padding: 3px 0; display: flex; justify-content: space-between; }
+.trip-summary-total { font-size: 14px; font-weight: 700; color: var(--amber); text-align: right; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--cream-border); }
+.trip-email-section { margin-bottom: 16px; }
+.trip-email-label { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+.trip-email-options { display: flex; flex-direction: column; gap: 6px; }
+.trip-email-option { display: flex; align-items: center; gap: 10px; padding: 10px 13px; background: var(--cream-dark); border: 1.5px solid var(--cream-border); border-radius: 10px; cursor: pointer; transition: border-color 0.15s; }
+.trip-email-option.selected { border-color: var(--amber); background: var(--amber-light); }
+.trip-email-option input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--amber); flex-shrink: 0; }
+.trip-email-user { display: flex; flex-direction: column; }
+.trip-email-name { font-size: 13px; font-weight: 500; color: var(--text-dark); }
+.trip-email-addr { font-size: 11px; color: var(--text-muted); }
+.trip-actions { display: flex; gap: 8px; }
+.trip-btn { flex: 1; padding: 13px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: transform 0.1s; }
+.trip-btn:active { transform: scale(0.97); }
+.trip-btn-email { background: var(--cobalt); color: #fff; }
+.trip-btn-finish { background: var(--green); color: #fff; }
+
+/* ── EMPTY ── */
 .empty { text-align: center; padding: 52px 24px; }
 .empty-icon { font-size: 52px; margin-bottom: 14px; }
 .empty-title { font-family: 'Playfair Display', serif; font-size: 21px; color: var(--text-mid); margin-bottom: 8px; }
 .empty-sub { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
 
-/* EDIT MODAL */
+/* ── EDIT MODAL ── */
 .modal-overlay { position: fixed; inset: 0; background: rgba(42,30,8,0.5); z-index: 400; display: none; align-items: flex-end; justify-content: center; }
 .modal-overlay.show { display: flex; }
 .modal { background: var(--cream); border-radius: 24px 24px 0 0; padding: 20px 18px 36px; width: 100%; max-width: 480px; animation: slideUp 0.22s ease; }
@@ -176,21 +298,75 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .btn-danger { background: var(--red-light); color: var(--red); }
 .btn-pin { background: var(--purple-light); color: var(--purple); }
 
-/* TOAST */
+/* ── TOAST ── */
 .toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--text-dark); color: var(--cream); padding: 10px 22px; border-radius: 22px; font-size: 13px; font-weight: 500; z-index: 600; transition: transform 0.3s ease; white-space: nowrap; pointer-events: none; }
 .toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── END TRIP BTN ── */
+.end-trip-bar { padding: 12px 14px; background: var(--cream); border-top: 1px solid var(--cream-border); position: sticky; bottom: 0; z-index: 90; }
+.end-trip-btn { width: 100%; padding: 14px; background: var(--green); color: #fff; border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; letter-spacing: 0.02em; transition: transform 0.1s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.end-trip-btn:active { transform: scale(0.98); }
+.end-trip-btn.hidden { display: none; }
 </style>
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-logo">Smart<span>Cart</span></div>
+  <div class="auth-tagline">Revolutionizing your shopping journey</div>
+  <div class="auth-card">
+    <div class="auth-card-title">Welcome</div>
+    <div class="auth-card-sub">Sign in to sync your list across devices and with your household.</div>
+    <button class="google-btn" id="googleSignInBtn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      Continue with Google
+    </button>
+  </div>
+</div>
+
+<!-- HOUSEHOLD SETUP SCREEN -->
+<div class="setup-screen hidden" id="setupScreen">
+  <div class="setup-title">Set Up Your Household</div>
+  <div class="setup-sub">Create a new household or join<br>an existing one with an invite link.</div>
+  <div class="setup-card" id="setupCard">
+    <button class="setup-btn setup-btn-primary" id="createHouseholdBtn">Create New Household</button>
+    <div class="setup-divider">— or —</div>
+    <input class="setup-input" id="inviteCodeInput" placeholder="Paste invite link or code…">
+    <button class="setup-btn setup-btn-secondary" id="joinHouseholdBtn">Join Household</button>
+  </div>
+  <!-- After creating -->
+  <div class="setup-card hidden" id="inviteCard">
+    <div style="font-size:13px;color:var(--text-mid);margin-bottom:8px;">Share this link with your household member:</div>
+    <div class="invite-link-box" id="inviteLinkBox"></div>
+    <button class="invite-copy-btn" id="copyInviteBtn">Copy Invite Link</button>
+    <button class="setup-btn setup-btn-primary" id="continueBtn" style="margin-top:4px;">Continue to SmartCart →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="appShell" style="display:none;">
+
 <div class="header">
   <div class="header-top">
     <div class="app-title">Smart<span>Cart</span></div>
-    <div class="total-badge" id="totalBadge">$0.00 est.</div>
+    <div class="header-right">
+      <div class="header-actions">
+        <button class="hdr-btn" id="receiptBtn" title="Import Receipt">🧾</button>
+        <button class="hdr-btn" id="userMenuBtn" title="Account">👤</button>
+      </div>
+      <div class="total-badge" id="totalBadge">$0.00 est.</div>
+    </div>
   </div>
   <div class="header-sub">
     <div class="sync-dot" id="syncDot"></div>
     <span id="syncLabel">Connecting...</span>
+    <div class="user-avatars" id="userAvatars"></div>
   </div>
 </div>
 
@@ -218,6 +394,29 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
   </div>
 </div>
 
+<div class="end-trip-bar">
+  <button class="end-trip-btn hidden" id="endTripBtn">🏁 End Trip &amp; Clear List</button>
+</div>
+
+</div><!-- end appShell -->
+
+<!-- Unknown Item Drawer -->
+<div class="unknown-overlay" id="unknownOverlay">
+  <div class="unknown-modal">
+    <div class="unknown-title">New Item</div>
+    <div class="unknown-sub">This item isn't in the database yet. Help us learn it.</div>
+    <input class="unknown-name-input" id="unknownName" type="text" placeholder="Item name…">
+    <div class="unknown-label">Which store?</div>
+    <div class="store-grid" id="unknownStoreGrid"></div>
+    <div class="unknown-label">Price (optional)</div>
+    <input class="unknown-price-input" id="unknownPrice" type="text" placeholder="e.g. $3.29">
+    <div class="unknown-actions">
+      <button class="unknown-btn unknown-btn-skip" id="unknownSkip">Skip &amp; Add</button>
+      <button class="unknown-btn unknown-btn-add" id="unknownAdd">Add &amp; Save</button>
+    </div>
+  </div>
+</div>
+
 <!-- Specialty Picker -->
 <div class="specialty-overlay" id="specialtyOverlay">
   <div class="specialty-modal">
@@ -225,6 +424,51 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
     <div class="specialty-sub" id="specialtySub">Select the one you want</div>
     <div class="specialty-list" id="specialtyList"></div>
     <button class="specialty-cancel" id="specialtyCancel">Cancel</button>
+  </div>
+</div>
+
+<!-- Receipt Import Modal -->
+<div class="receipt-overlay" id="receiptOverlay">
+  <div class="receipt-modal">
+    <div class="receipt-title">Import Receipt</div>
+    <div class="receipt-sub">SmartCart will learn from this receipt and discard it after processing.</div>
+    <div class="unknown-label">Which store is this receipt from?</div>
+    <div class="receipt-store-grid" id="receiptStoreGrid"></div>
+    <div class="receipt-upload-area" id="receiptUploadArea">
+      <div class="receipt-upload-icon">📄</div>
+      <div class="receipt-upload-text">Tap to upload receipt</div>
+      <div class="receipt-upload-sub">Photo or PDF supported</div>
+    </div>
+    <input class="receipt-file-input" id="receiptFileInput" type="file" accept="image/*,application/pdf">
+    <div class="receipt-processing" id="receiptProcessing">
+      <div class="receipt-spinner"></div>
+      <div class="receipt-processing-text">Reading your receipt…</div>
+    </div>
+    <div class="unmatched-section" id="unmatchedSection">
+      <div class="unmatched-title">Couldn't match these items — assign a store:</div>
+      <div id="unmatchedList"></div>
+    </div>
+    <div class="receipt-actions">
+      <button class="receipt-btn receipt-btn-cancel" id="receiptCancel">Cancel</button>
+      <button class="receipt-btn receipt-btn-primary" id="receiptProcess">Process Receipt</button>
+    </div>
+  </div>
+</div>
+
+<!-- Trip End Modal -->
+<div class="trip-overlay" id="tripOverlay">
+  <div class="trip-modal">
+    <div class="trip-title">Trip Complete 🏁</div>
+    <div class="trip-sub">Here's what you bought. Upload a receipt to help SmartCart learn, then finish.</div>
+    <div class="trip-summary-box" id="tripSummaryBox"></div>
+    <div class="trip-email-section">
+      <div class="trip-email-label">Email summary to:</div>
+      <div class="trip-email-options" id="tripEmailOptions"></div>
+    </div>
+    <div class="trip-actions">
+      <button class="trip-btn trip-btn-finish" id="tripFinishBtn">Finish &amp; Clear</button>
+      <button class="trip-btn trip-btn-email" id="tripEmailBtn">Send &amp; Clear</button>
+    </div>
   </div>
 </div>
 
@@ -257,7 +501,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
     </div>
     <div class="modal-actions">
       <button class="modal-btn btn-danger" id="editDelete">Delete</button>
-      <button class="modal-btn btn-pin" id="editPin">☆ Pin</button>
+      <button class="modal-btn btn-pin" id="editPin">📌 Pin</button>
       <button class="modal-btn btn-secondary" id="editCancel">Cancel</button>
       <button class="modal-btn btn-primary" id="editSave">Save</button>
     </div>
@@ -269,6 +513,12 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, onValue, push, set, remove, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+// ── EMAILJS INIT ──
+emailjs.init('Ui3JiMz1dAKf6x9Uq');
+const EMAILJS_SERVICE  = 'service_jfipd9g';
+const EMAILJS_TEMPLATE = 'template_sfr7sjy';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCll3iss7JSvyYXeyTsA4sLhwAMMT1GPL4",
@@ -280,17 +530,16 @@ const firebaseConfig = {
   appId: "1:919377763258:web:988c1c6e5a801051505b83"
 };
 
-const fbApp = initializeApp(firebaseConfig);
-const db = getDatabase(fbApp);
-const itemsRef = ref(db, 'items');
-const favsRef  = ref(db, 'favorites');
-const mindRef  = ref(db, 'mind');
+const fbApp  = initializeApp(firebaseConfig);
+const db     = getDatabase(fbApp);
+const auth   = getAuth(fbApp);
+const provider = new GoogleAuthProvider();
 
-// THRESHOLDS
-const LEARN_THRESHOLD   = 3; // purchases before auto-selecting
-const SKIP_THRESHOLD    = 5; // purchases before skipping picker entirely
+// ── THRESHOLDS ──
+const LEARN_THRESHOLD = 3;
+const SKIP_THRESHOLD  = 5;
 
-// STORE CONFIG
+// ── STORE CONFIG ──
 const STORES = {
   'Aldi':        { cls:'store-aldi',        emoji:'🛒' },
   'Walmart':     { cls:'store-walmart',     emoji:'🏪' },
@@ -299,8 +548,9 @@ const STORES = {
   'Giant Eagle': { cls:'store-giant-eagle', emoji:'🦅' },
   'Amazon':      { cls:'store-amazon',      emoji:'📬' },
 };
+const STORE_NAMES = Object.keys(STORES);
 
-// ITEM DATABASE
+// ── ITEM DATABASE ──
 const ITEMS = {
   'milk': [
     { name:'Milk — Whole Gallon',       store:'Aldi', price:'$3.29', detail:'1 gallon, whole' },
@@ -323,7 +573,7 @@ const ITEMS = {
   'bread': [
     { name:'Bread — White Sandwich',    store:'Aldi', price:'$1.99', detail:'20 oz loaf' },
     { name:'Bread — Whole Wheat',       store:'Aldi', price:'$2.19', detail:'20 oz loaf' },
-    { name:'Bread — Dave\'s Killer',    store:'Walmart', price:'$5.98', detail:'27 oz, whole grain' },
+    { name:"Bread — Dave's Killer",     store:'Walmart', price:'$5.98', detail:'27 oz, whole grain' },
     { name:'Bread — Sourdough Loaf',    store:'Giant Eagle', price:'$4.49', detail:'bakery, 24 oz' },
     { name:'Bread — Artisan Baguette',  store:'Giant Eagle', price:'$2.99', detail:'bakery fresh' },
     { name:'Bread — Brioche',           store:'Target', price:'$4.29', detail:'sliced brioche loaf' },
@@ -347,11 +597,11 @@ const ITEMS = {
     { name:'Cheese — Costco 3lb Blend',    store:'Costco', price:'$11.99', detail:'3 lb bag, Mexican blend' },
   ],
   'yogurt': [
-    { name:'Yogurt — Greek Plain 32oz',  store:'Aldi', price:'$2.49', detail:'32 oz tub' },
-    { name:'Yogurt — Greek Vanilla 32oz',store:'Aldi', price:'$2.49', detail:'32 oz tub' },
-    { name:'Yogurt — Chobani Cup',       store:'Walmart', price:'$1.28', detail:'5.3 oz cup' },
-    { name:'Yogurt — Oikos Triple Zero', store:'Walmart', price:'$1.48', detail:'5.3 oz cup' },
-    { name:'Yogurt — Skyr Icelandic',    store:'Target', price:'$2.99', detail:'17.6 oz' },
+    { name:'Yogurt — Greek Plain 32oz',   store:'Aldi', price:'$2.49', detail:'32 oz tub' },
+    { name:'Yogurt — Greek Vanilla 32oz', store:'Aldi', price:'$2.49', detail:'32 oz tub' },
+    { name:'Yogurt — Chobani Cup',        store:'Walmart', price:'$1.28', detail:'5.3 oz cup' },
+    { name:'Yogurt — Oikos Triple Zero',  store:'Walmart', price:'$1.48', detail:'5.3 oz cup' },
+    { name:'Yogurt — Skyr Icelandic',     store:'Target', price:'$2.99', detail:'17.6 oz' },
   ],
   'chicken': [
     { name:'Chicken — Boneless Breast',  store:'Aldi', price:'$2.99/lb', detail:'per lb, fresh' },
@@ -369,66 +619,65 @@ const ITEMS = {
     { name:'Coffee — Cold Brew Bags',    store:'Walmart', price:'$6.98', detail:'makes 6 pitchers' },
   ],
   'pasta': [
-    { name:'Pasta — Spaghetti 1lb',      store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Penne 1lb',          store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Rotini 1lb',         store:'Walmart', price:'$1.18', detail:'16 oz box' },
-    { name:'Pasta — Fettuccine',         store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Gluten Free',        store:'Target', price:'$2.99', detail:'12 oz box' },
+    { name:'Pasta — Spaghetti 1lb',  store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Penne 1lb',      store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Rotini 1lb',     store:'Walmart', price:'$1.18', detail:'16 oz box' },
+    { name:'Pasta — Fettuccine',     store:'Aldi', price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Gluten Free',    store:'Target', price:'$2.99', detail:'12 oz box' },
   ],
   'paper towels': [
-    { name:'Paper Towels — Bounty 6pk',  store:'Walmart', price:'$9.97', detail:'6 double rolls' },
-    { name:'Paper Towels — Costco 12pk', store:'Costco', price:'$22.99', detail:'12 triple rolls' },
-    { name:'Paper Towels — Aldi 2pk',    store:'Aldi', price:'$2.99', detail:'2 rolls' },
-    { name:'Paper Towels — Target Brand',store:'Target', price:'$7.99', detail:'6 rolls' },
+    { name:'Paper Towels — Bounty 6pk',   store:'Walmart', price:'$9.97', detail:'6 double rolls' },
+    { name:'Paper Towels — Costco 12pk',  store:'Costco', price:'$22.99', detail:'12 triple rolls' },
+    { name:'Paper Towels — Aldi 2pk',     store:'Aldi', price:'$2.99', detail:'2 rolls' },
+    { name:'Paper Towels — Target Brand', store:'Target', price:'$7.99', detail:'6 rolls' },
   ],
   'toilet paper': [
-    { name:'Toilet Paper — Costco 30pk', store:'Costco', price:'$19.99', detail:'30 double rolls' },
-    { name:'Toilet Paper — Charmin 12pk',store:'Walmart', price:'$9.97', detail:'12 mega rolls' },
-    { name:'Toilet Paper — Aldi 6pk',    store:'Aldi', price:'$4.99', detail:'6 rolls' },
-    { name:'Toilet Paper — Cottonelle',  store:'Target', price:'$8.99', detail:'9 rolls' },
+    { name:'Toilet Paper — Costco 30pk',  store:'Costco', price:'$19.99', detail:'30 double rolls' },
+    { name:'Toilet Paper — Charmin 12pk', store:'Walmart', price:'$9.97', detail:'12 mega rolls' },
+    { name:'Toilet Paper — Aldi 6pk',     store:'Aldi', price:'$4.99', detail:'6 rolls' },
+    { name:'Toilet Paper — Cottonelle',   store:'Target', price:'$8.99', detail:'9 rolls' },
   ],
   'olive oil': [
-    { name:'Olive Oil — Costco 2L',      store:'Costco', price:'$11.99', detail:'2 liter, extra virgin' },
-    { name:'Olive Oil — Aldi 17oz',      store:'Aldi', price:'$4.49', detail:'17 oz, extra virgin' },
-    { name:'Olive Oil — Walmart 17oz',   store:'Walmart', price:'$4.98', detail:'17 oz, pure' },
+    { name:'Olive Oil — Costco 2L',   store:'Costco', price:'$11.99', detail:'2 liter, extra virgin' },
+    { name:'Olive Oil — Aldi 17oz',   store:'Aldi', price:'$4.49', detail:'17 oz, extra virgin' },
+    { name:'Olive Oil — Walmart 17oz',store:'Walmart', price:'$4.98', detail:'17 oz, pure' },
   ],
   'dish soap': [
-    { name:'Dish Soap — Dawn Original',  store:'Target', price:'$3.47', detail:'19.4 oz' },
-    { name:'Dish Soap — Aldi Brand',     store:'Aldi', price:'$1.49', detail:'28 oz' },
-    { name:'Dish Soap — Costco Dawn 3pk',store:'Costco', price:'$9.99', detail:'3 pack bulk' },
+    { name:'Dish Soap — Dawn Original',   store:'Target', price:'$3.47', detail:'19.4 oz' },
+    { name:'Dish Soap — Aldi Brand',      store:'Aldi', price:'$1.49', detail:'28 oz' },
+    { name:'Dish Soap — Costco Dawn 3pk', store:'Costco', price:'$9.99', detail:'3 pack bulk' },
   ],
   'shampoo': [
-    { name:'Shampoo — Dove Moisturizing',store:'Target', price:'$6.99', detail:'12 oz' },
-    { name:'Shampoo — Pantene Pro-V',    store:'Walmart', price:'$4.97', detail:'12.6 oz' },
-    { name:'Shampoo — Head & Shoulders', store:'Walmart', price:'$5.97', detail:'13.5 oz' },
-    { name:'Shampoo — Kirkland 2pk',     store:'Costco', price:'$12.99', detail:'2 x 25.4 oz' },
+    { name:'Shampoo — Dove Moisturizing', store:'Target', price:'$6.99', detail:'12 oz' },
+    { name:'Shampoo — Pantene Pro-V',     store:'Walmart', price:'$4.97', detail:'12.6 oz' },
+    { name:'Shampoo — Head & Shoulders',  store:'Walmart', price:'$5.97', detail:'13.5 oz' },
+    { name:'Shampoo — Kirkland 2pk',      store:'Costco', price:'$12.99', detail:'2 x 25.4 oz' },
   ],
   'detergent': [
-    { name:'Laundry — Tide Costco',      store:'Costco', price:'$21.99', detail:'152 loads, HE' },
-    { name:'Laundry — Aldi Brand',       store:'Aldi', price:'$7.99', detail:'75 loads' },
-    { name:'Laundry — Arm & Hammer',     store:'Walmart', price:'$8.97', detail:'100 loads' },
-    { name:'Laundry — Tide Pods 42ct',   store:'Target', price:'$14.99', detail:'42 pods' },
+    { name:'Laundry — Tide Costco',    store:'Costco', price:'$21.99', detail:'152 loads, HE' },
+    { name:'Laundry — Aldi Brand',     store:'Aldi', price:'$7.99', detail:'75 loads' },
+    { name:'Laundry — Arm & Hammer',   store:'Walmart', price:'$8.97', detail:'100 loads' },
+    { name:'Laundry — Tide Pods 42ct', store:'Target', price:'$14.99', detail:'42 pods' },
   ],
   'rice': [
-    { name:'Rice — White Long Grain 5lb',store:'Walmart', price:'$4.98', detail:'5 lb bag' },
-    { name:'Rice — Jasmine 5lb',         store:'Walmart', price:'$5.98', detail:'5 lb bag' },
-    { name:'Rice — Brown Long Grain',    store:'Aldi', price:'$2.99', detail:'2 lb bag' },
-    { name:'Rice — Costco Jasmine 25lb', store:'Costco', price:'$18.99', detail:'25 lb bag, bulk' },
-    { name:'Rice — Microwavable Cups 6pk',store:'Target', price:'$3.99', detail:'ready rice' },
+    { name:'Rice — White Long Grain 5lb',  store:'Walmart', price:'$4.98', detail:'5 lb bag' },
+    { name:'Rice — Jasmine 5lb',           store:'Walmart', price:'$5.98', detail:'5 lb bag' },
+    { name:'Rice — Brown Long Grain',      store:'Aldi', price:'$2.99', detail:'2 lb bag' },
+    { name:'Rice — Costco Jasmine 25lb',   store:'Costco', price:'$18.99', detail:'25 lb bag, bulk' },
+    { name:'Rice — Microwavable Cups 6pk', store:'Target', price:'$3.99', detail:'ready rice' },
   ],
   'apples': [
-    { name:'Apples — Gala 3lb Bag',      store:'Aldi', price:'$3.49', detail:'3 lb bag' },
-    { name:'Apples — Honeycrisp',        store:'Giant Eagle', price:'$1.99/lb', detail:'per pound' },
-    { name:'Apples — Fuji 3lb Bag',      store:'Walmart', price:'$3.98', detail:'3 lb bag' },
-    { name:'Apples — Granny Smith',      store:'Aldi', price:'$3.49', detail:'3 lb bag' },
-    { name:'Apples — Cosmic Crisp',      store:'Giant Eagle', price:'$2.49/lb', detail:'per pound' },
+    { name:'Apples — Gala 3lb Bag',    store:'Aldi', price:'$3.49', detail:'3 lb bag' },
+    { name:'Apples — Honeycrisp',      store:'Giant Eagle', price:'$1.99/lb', detail:'per pound' },
+    { name:'Apples — Fuji 3lb Bag',    store:'Walmart', price:'$3.98', detail:'3 lb bag' },
+    { name:'Apples — Granny Smith',    store:'Aldi', price:'$3.49', detail:'3 lb bag' },
+    { name:'Apples — Cosmic Crisp',    store:'Giant Eagle', price:'$2.49/lb', detail:'per pound' },
   ],
   'bananas': [
-    { name:'Bananas — Bunch',            store:'Aldi', price:'$0.49/lb', detail:'approx 5-7 bananas' },
-    { name:'Bananas — Organic',          store:'Giant Eagle', price:'$0.79/lb', detail:'organic' },
-    { name:'Plantains',                  store:'Walmart', price:'$0.69/lb', detail:'green plantains' },
+    { name:'Bananas — Bunch',     store:'Aldi', price:'$0.49/lb', detail:'approx 5-7 bananas' },
+    { name:'Bananas — Organic',   store:'Giant Eagle', price:'$0.79/lb', detail:'organic' },
+    { name:'Plantains',           store:'Walmart', price:'$0.69/lb', detail:'green plantains' },
   ],
-  // SIMPLE ITEMS
   'lettuce':    { name:'Lettuce — Romaine Hearts 3pk', store:'Aldi', price:'$2.49' },
   'tomatoes':   { name:'Tomatoes — Roma 3lb',          store:'Aldi', price:'$2.99' },
   'onions':     { name:'Onions — Yellow 3lb',          store:'Aldi', price:'$1.99' },
@@ -457,150 +706,303 @@ const ITEMS = {
 const SEARCH_LIST = [];
 for (const [kw, val] of Object.entries(ITEMS)) {
   if (Array.isArray(val)) {
-    SEARCH_LIST.push({ keyword:kw, displayName: kw.charAt(0).toUpperCase()+kw.slice(1), store:val[0].store, price:val[0].price, specialty:true, variants:val });
+    SEARCH_LIST.push({ keyword:kw, displayName:kw.charAt(0).toUpperCase()+kw.slice(1), store:val[0].store, price:val[0].price, specialty:true, variants:val });
   } else {
-    SEARCH_LIST.push({ keyword:kw, displayName: val.name, store:val.store, price:val.price, specialty:false, item:val });
+    SEARCH_LIST.push({ keyword:kw, displayName:val.name, store:val.store, price:val.price, specialty:false, item:val });
   }
 }
 
-// Mind key helper — normalize item name to a safe firebase key
-function mindKey(name) {
-  return name.toLowerCase().split('—')[0].trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+// ── STATE ──
+let currentUser   = null;
+let householdId   = null;
+let householdData = {};
+let items         = {};
+let favorites     = {};
+let mind          = {};
+let itemsDb       = {};
+let editingId     = null;
+let unknownPendingName = '';
+let selectedUnknownStore = '';
+
+// ── FIREBASE REFS (set after household known) ──
+let itemsRef, favsRef, mindRef, itemsDbRef, householdRef;
+
+function initRefs(hId) {
+  householdId = hId;
+  itemsRef   = ref(db, `households/${hId}/items`);
+  favsRef    = ref(db, `households/${hId}/favorites`);
+  mindRef    = ref(db, `households/${hId}/mind`);
+  itemsDbRef = ref(db, `households/${hId}/items_db`);
+  householdRef = ref(db, `households/${hId}`);
 }
 
-// ─── STATE ────────────────────────────────────────────────────
-let items={}, favorites={}, mind={}, editingId=null;
-
-// ─── FIREBASE LISTENERS ───────────────────────────────────────
-onValue(itemsRef, snap => {
-  items = snap.val()||{};
-  renderAll();
-  document.getElementById('syncDot').classList.remove('error');
-  document.getElementById('syncLabel').textContent =
-    new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+' · Pittsburgh';
-}, () => {
-  document.getElementById('syncDot').classList.add('error');
-  document.getElementById('syncLabel').textContent = 'Connection error — check Firebase rules';
+// ── AUTH FLOW ──
+document.getElementById('googleSignInBtn').addEventListener('click', async () => {
+  try {
+    await signInWithPopup(auth, provider);
+  } catch(e) { showToast('Sign in failed — try again'); }
 });
 
-onValue(favsRef, snap => { favorites=snap.val()||{}; renderFavs(); });
-onValue(mindRef, snap => { mind=snap.val()||{}; });
+onAuthStateChanged(auth, async user => {
+  if (!user) {
+    showScreen('auth');
+    return;
+  }
+  currentUser = user;
+  // Save user profile
+  await set(ref(db, `users/${user.uid}`), {
+    name:  user.displayName,
+    email: user.email,
+    photo: user.photoURL,
+    uid:   user.uid,
+  });
+  // Check if user has a household
+  const userSnap = await get(ref(db, `users/${user.uid}/householdId`));
+  if (userSnap.exists()) {
+    await loadHousehold(userSnap.val());
+  } else {
+    // Check URL for invite code
+    const params = new URLSearchParams(window.location.search);
+    const inviteCode = params.get('invite');
+    if (inviteCode) {
+      await processInvite(inviteCode);
+    } else {
+      showScreen('setup');
+    }
+  }
+});
 
-// ─── THE MIND — LEARNING FUNCTIONS ───────────────────────────
+async function loadHousehold(hId) {
+  initRefs(hId);
+  // Load household member data
+  const hSnap = await get(ref(db, `households/${hId}/members`));
+  householdData = hSnap.val() || {};
+  // Add current user to members
+  set(ref(db, `households/${hId}/members/${currentUser.uid}`), {
+    name:  currentUser.displayName,
+    email: currentUser.email,
+    photo: currentUser.photoURL,
+    uid:   currentUser.uid,
+  });
+  showScreen('app');
+  startListeners();
+  renderUserAvatars();
+}
+
+function startListeners() {
+  onValue(itemsRef, snap => {
+    items = snap.val() || {};
+    renderAll();
+    document.getElementById('syncDot').classList.remove('error');
+    document.getElementById('syncLabel').textContent =
+      new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+' · Pittsburgh';
+  }, () => {
+    document.getElementById('syncDot').classList.add('error');
+    document.getElementById('syncLabel').textContent = 'Connection error';
+  });
+  onValue(favsRef,    snap => { favorites = snap.val()||{}; renderFavs(); });
+  onValue(mindRef,    snap => { mind = snap.val()||{}; });
+  onValue(itemsDbRef, snap => {
+    itemsDb = snap.val()||{};
+    // Merge learned items into search list
+    for (const [kw, entry] of Object.entries(itemsDb)) {
+      if (!SEARCH_LIST.find(s=>s.keyword===kw)) {
+        SEARCH_LIST.push({ keyword:kw, displayName:entry.name, store:entry.store, price:entry.price||'', specialty:false, item:entry, learned:true });
+      }
+    }
+  });
+  onValue(ref(db, `households/${householdId}/members`), snap => {
+    householdData = snap.val()||{};
+    renderUserAvatars();
+  });
+}
+
+function renderUserAvatars() {
+  const container = document.getElementById('userAvatars');
+  container.innerHTML = Object.values(householdData).map(m => {
+    if (m.photo) return `<img class="user-avatar" src="${m.photo}" title="${m.name}" onerror="this.style.display='none'">`;
+    const initials = (m.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    return `<div class="user-avatar-placeholder" title="${m.name}">${initials}</div>`;
+  }).join('');
+}
+
+// ── SETUP SCREEN ──
+document.getElementById('createHouseholdBtn').addEventListener('click', async () => {
+  const hId = 'hh_' + Math.random().toString(36).slice(2,10);
+  await set(ref(db, `users/${currentUser.uid}/householdId`), hId);
+  await set(ref(db, `users/${currentUser.uid}/isAdmin`), true);
+  // Generate single-use invite
+  const inviteId = Math.random().toString(36).slice(2,12);
+  await set(ref(db, `invites/${inviteId}`), { householdId: hId, used: false, createdAt: Date.now() });
+  const inviteLink = `${window.location.origin}${window.location.pathname}?invite=${inviteId}`;
+  document.getElementById('setupCard').classList.add('hidden');
+  document.getElementById('inviteCard').classList.remove('hidden');
+  document.getElementById('inviteLinkBox').textContent = inviteLink;
+  initRefs(hId);
+  set(ref(db, `households/${hId}/members/${currentUser.uid}`), {
+    name:  currentUser.displayName,
+    email: currentUser.email,
+    photo: currentUser.photoURL,
+    uid:   currentUser.uid,
+  });
+});
+
+document.getElementById('copyInviteBtn').addEventListener('click', () => {
+  navigator.clipboard.writeText(document.getElementById('inviteLinkBox').textContent);
+  showToast('Invite link copied!');
+});
+
+document.getElementById('continueBtn').addEventListener('click', async () => {
+  const hId = householdId || (await get(ref(db,`users/${currentUser.uid}/householdId`))).val();
+  await loadHousehold(hId);
+});
+
+document.getElementById('joinHouseholdBtn').addEventListener('click', async () => {
+  const input = document.getElementById('inviteCodeInput').value.trim();
+  const code = input.includes('invite=') ? input.split('invite=')[1] : input;
+  await processInvite(code);
+});
+
+async function processInvite(code) {
+  const invSnap = await get(ref(db, `invites/${code}`));
+  if (!invSnap.exists()) { showToast('Invalid invite link'); return; }
+  const inv = invSnap.val();
+  if (inv.used) { showToast('This invite has already been used'); return; }
+  // Mark used
+  await update(ref(db, `invites/${code}`), { used: true, usedBy: currentUser.uid, usedAt: Date.now() });
+  await set(ref(db, `users/${currentUser.uid}/householdId`), inv.householdId);
+  // Clear URL
+  window.history.replaceState({}, '', window.location.pathname);
+  await loadHousehold(inv.householdId);
+}
+
+function showScreen(screen) {
+  document.getElementById('authScreen').classList.toggle('hidden', screen !== 'auth');
+  document.getElementById('setupScreen').classList.toggle('hidden', screen !== 'setup');
+  document.getElementById('appShell').style.display = screen === 'app' ? 'block' : 'none';
+}
+
+// ── MIND — EXACT KEY ──
+function mindKey(name) {
+  // Use exact item name, just make it firebase-safe
+  return name.replace(/[.#$[\]/]/g, '_');
+}
+
 function learnItem(item) {
   const k = mindKey(item.name);
-  const now = Date.now();
   const existing = mind[k] || {};
-  const newCount = (existing.count||0) + 1;
+  const newCount = (existing.count || 0) + 1;
+  set(ref(db, `households/${householdId}/mind/${k}`), {
+    name:        item.name,
+    store:       item.store,
+    price:       item.price,
+    count:       newCount,
+    last_bought: Date.now(),
+    confirmed:   existing.confirmed || false,
+  });
+  // Also update shared price in items_db
+  updateItemDbPrice(item);
+}
 
-  // Write history entry
-  const histRef = ref(db, `mind/${k}/history`);
-  push(histRef, { store:item.store, price:item.price, date:now });
-
-  // Update top-level mind entry
-  const entry = {
-    name:       item.name,
-    brand:      extractBrand(item.name),
-    store:      item.store,
-    price:      item.price,
-    count:      newCount,
-    last_bought: now,
-    confirmed:  existing.confirmed||false,
-  };
-  if (existing.note) entry.note = existing.note;
-  set(ref(db,`mind/${k}`), { ...entry });
+function updateItemDbPrice(item) {
+  const kw = item.name.toLowerCase().split('—')[0].trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const existing = itemsDb[kw];
+  if (existing) {
+    update(ref(db, `households/${householdId}/items_db/${kw}`), { price: item.price, store: item.store });
+  }
 }
 
 function pinItem(item) {
   const k = mindKey(item.name);
-  const existing = mind[k]||{};
-  set(ref(db,`mind/${k}`), {
+  const existing = mind[k] || {};
+  set(ref(db, `households/${householdId}/mind/${k}`), {
     ...existing,
-    name:      item.name,
-    brand:     extractBrand(item.name),
-    store:     item.store,
-    price:     item.price,
-    confirmed: true,
-    count:     Math.max(existing.count||0, SKIP_THRESHOLD),
+    name:        item.name,
+    store:       item.store,
+    price:       item.price,
+    confirmed:   true,
+    count:       Math.max(existing.count || 0, SKIP_THRESHOLD),
     last_bought: Date.now(),
   });
   showToast('📌 Pinned as your go-to');
 }
 
-function extractBrand(name) {
-  // Pull brand from "Item — Brand Detail" format
-  const parts = name.split('—');
-  if (parts.length > 1) return parts[1].trim().split(' ')[0];
-  return name.split(' ')[0];
-}
-
 function getMindEntry(keyword) {
-  // Find mind entry matching a keyword
   for (const [k, entry] of Object.entries(mind)) {
-    if (k.includes(keyword) || (entry.name||'').toLowerCase().includes(keyword)) return entry;
+    if (entry.name && entry.name.toLowerCase().includes(keyword.toLowerCase())) return entry;
   }
   return null;
 }
 
-// ─── ADD ITEM ─────────────────────────────────────────────────
+// ── ADD ITEM ──
 function addItem(name, store, price, note) {
   if (!name.trim()) return;
-  push(itemsRef, { name:name.trim(), store, price, note:note||'', done:false, added:Date.now() });
-  showToast('Added to '+store);
+  push(itemsRef, {
+    name:    name.trim(),
+    store,
+    price,
+    note:    note || '',
+    done:    false,
+    added:   Date.now(),
+    addedBy: currentUser.uid,
+    addedByName: currentUser.displayName,
+    addedByPhoto: currentUser.photoURL || '',
+  });
+  showToast('Added to ' + store);
 }
 
-// ─── SMART RESOLVE: check mind first, then database ──────────
+function saveToItemsDb(keyword, name, store, price) {
+  const k = keyword.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  set(ref(db, `households/${householdId}/items_db/${k}`), { name, store, price: price || '', keyword: k });
+}
+
+// ── SMART RESOLVE ──
 function resolveAndAdd(keyword, entry) {
   const mindEntry = getMindEntry(keyword);
-
-  // If mind knows this item and count >= SKIP_THRESHOLD → add instantly
   if (mindEntry && (mindEntry.count >= SKIP_THRESHOLD || mindEntry.confirmed)) {
     addItem(mindEntry.name, mindEntry.store, mindEntry.price, '');
     return;
   }
-
-  // If specialty with mind preference → open picker but highlight their usual
-  if (entry.specialty) {
-    openSpecialty(entry, mindEntry);
-    return;
-  }
-
-  // Simple item
+  if (entry.specialty) { openSpecialty(entry, mindEntry); return; }
   addItem(entry.item.name, entry.item.store, entry.item.price, '');
 }
 
-// ─── RENDER ───────────────────────────────────────────────────
+// ── RENDER ──
 function renderAll() {
-  const main = document.getElementById('main');
+  const main  = document.getElementById('main');
   const empty = document.getElementById('emptyState');
-  const activeItems = Object.entries(items).filter(([,v])=>!v.done);
+  const endBtn = document.getElementById('endTripBtn');
   main.querySelectorAll('.store-card').forEach(c=>c.remove());
 
-  if (!activeItems.length) {
-    empty.style.display='block';
-    document.getElementById('totalBadge').textContent='$0.00 est.';
+  const activeItems = Object.entries(items).filter(([,v])=>!v.done);
+  const doneItems   = Object.entries(items).filter(([,v])=>v.done);
+
+  if (!activeItems.length && !doneItems.length) {
+    empty.style.display = 'block';
+    document.getElementById('totalBadge').textContent = '$0.00 est.';
+    endBtn.classList.add('hidden');
     return;
   }
-  empty.style.display='none';
+  empty.style.display = 'none';
+  endBtn.classList.toggle('hidden', doneItems.length === 0);
 
-  const byStore={};
-  let total=0;
-  activeItems.forEach(([id,item])=>{
-    if(!byStore[item.store]) byStore[item.store]=[];
+  const byStore = {};
+  let total = 0;
+  activeItems.forEach(([id,item]) => {
+    if (!byStore[item.store]) byStore[item.store] = [];
     byStore[item.store].push([id,item]);
-    const p=parseFloat((item.price||'0').replace(/[^0-9.]/g,''));
-    if(!isNaN(p)) total+=p;
+    const p = parseFloat((item.price||'0').replace(/[^0-9.]/g,''));
+    if (!isNaN(p)) total += p;
   });
-  document.getElementById('totalBadge').textContent='$'+total.toFixed(2)+' est.';
+  document.getElementById('totalBadge').textContent = '$' + total.toFixed(2) + ' est.';
 
-  Object.entries(byStore).forEach(([store,storeItems])=>{
-    const cfg=STORES[store]||{cls:'store-walmart',emoji:'🏪'};
-    let sub=0;
-    storeItems.forEach(([,it])=>{ const p=parseFloat((it.price||'0').replace(/[^0-9.]/g,'')); if(!isNaN(p)) sub+=p; });
-    const mk = mindKey(storeItems[0][1].name);
-    const card=document.createElement('div');
-    card.className=`store-card ${cfg.cls}`;
-    card.innerHTML=`
+  Object.entries(byStore).forEach(([store, storeItems]) => {
+    const cfg = STORES[store] || { cls:'store-walmart', emoji:'🏪' };
+    let sub = 0;
+    storeItems.forEach(([,it]) => { const p = parseFloat((it.price||'0').replace(/[^0-9.]/g,'')); if(!isNaN(p)) sub+=p; });
+    const card = document.createElement('div');
+    card.className = `store-card ${cfg.cls}`;
+    card.innerHTML = `
       <div class="card-header">
         <div class="card-left">
           <div class="store-icon">${cfg.emoji}</div>
@@ -613,12 +1015,16 @@ function renderAll() {
       </div>
       <div class="card-body">
         <div class="card-divider"></div>
-        ${storeItems.map(([id,it])=>{
-          const mk2=mindKey(it.name);
-          const me=mind[mk2];
-          const isLearned=me&&me.count>=LEARN_THRESHOLD;
+        ${storeItems.map(([id,it]) => {
+          const mk = mindKey(it.name);
+          const me = mind[mk];
+          const isLearned = me && me.count >= LEARN_THRESHOLD;
+          const avatarHtml = it.addedByPhoto
+            ? `<img class="item-avatar" src="${it.addedByPhoto}" title="${it.addedByName||''}" onerror="this.outerHTML='<div class=item-avatar-placeholder>${(it.addedByName||'?')[0].toUpperCase()}</div>'">`
+            : `<div class="item-avatar-placeholder" title="${it.addedByName||''}">${(it.addedByName||'?')[0].toUpperCase()}</div>`;
           return `<div class="item-row" id="row-${id}">
             <div class="item-check" data-id="${id}"></div>
+            ${avatarHtml}
             <div class="item-content">
               <div class="item-name">${it.name}</div>
               ${it.note?`<div class="item-note">${it.note}</div>`:''}
@@ -627,56 +1033,56 @@ function renderAll() {
             <span class="item-price">${it.price||''}</span>
             <div class="item-btns">
               <button class="item-btn" data-edit="${id}">✎</button>
-              <button class="item-btn pin-btn${me&&me.confirmed?' pinned':''}" data-pin="${id}" title="Pin as go-to">📌</button>
+              <button class="item-btn pin-btn${me&&me.confirmed?' pinned':''}" data-pin="${id}">📌</button>
               <button class="item-btn" data-fav="${id}">★</button>
             </div>
           </div>`;
         }).join('')}
       </div>`;
 
-    card.querySelector('.card-header').addEventListener('click',()=>card.classList.toggle('collapsed'));
+    card.querySelector('.card-header').addEventListener('click', () => card.classList.toggle('collapsed'));
 
-    // Check off → triggers learning
-    card.querySelectorAll('.item-check').forEach(btn=>{
-      btn.addEventListener('click',e=>{
+    card.querySelectorAll('.item-check').forEach(btn => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
-        const id=btn.dataset.id;
-        const row=document.getElementById('row-'+id);
-        const item=items[id];
+        const id   = btn.dataset.id;
+        const row  = document.getElementById('row-'+id);
+        const item = items[id];
         row.classList.add('done');
         btn.classList.add('checked');
-        btn.textContent='✓';
-        // Learn from this purchase
-        if(item) learnItem(item);
-        setTimeout(()=>{
+        btn.textContent = '✓';
+        if (item) learnItem(item);
+        setTimeout(() => {
           row.classList.add('fading');
-          setTimeout(()=>update(ref(db,'items/'+id),{done:true}),500);
-        },1200);
+          setTimeout(() => update(ref(db,'households/'+householdId+'/items/'+id),{done:true}), 500);
+        }, 1200);
       });
     });
 
-    // Pin as go-to
-    card.querySelectorAll('[data-pin]').forEach(btn=>{
-      btn.addEventListener('click',e=>{
+    card.querySelectorAll('[data-pin]').forEach(btn => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
-        const item=items[btn.dataset.pin];
-        if(item){ pinItem(item); btn.classList.add('pinned'); }
+        const item = items[btn.dataset.pin];
+        if (item) { pinItem(item); btn.classList.add('pinned'); }
       });
     });
 
-    // Edit
-    card.querySelectorAll('[data-edit]').forEach(btn=>{
-      btn.addEventListener('click',e=>{e.stopPropagation();openEdit(btn.dataset.edit);});
+    card.querySelectorAll('[data-edit]').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); openEdit(btn.dataset.edit); });
     });
 
-    // Favorite
-    card.querySelectorAll('[data-fav]').forEach(btn=>{
-      btn.addEventListener('click',e=>{
+    card.querySelectorAll('[data-fav]').forEach(btn => {
+      btn.addEventListener('click', e => {
         e.stopPropagation();
-        const it=items[btn.dataset.fav];
-        if(it){
-          const k=it.name.toLowerCase().replace(/\W+/g,'-');
-          set(ref(db,'favorites/'+k),{name:it.name,store:it.store,price:it.price,learned:!!(mind[mindKey(it.name)]&&mind[mindKey(it.name)].count>=LEARN_THRESHOLD)});
+        const it = items[btn.dataset.fav];
+        if (it) {
+          const k = mindKey(it.name);
+          set(ref(db, `households/${householdId}/favorites/${k}`), {
+            name:    it.name,
+            store:   it.store,
+            price:   it.price,
+            learned: !!(mind[k]&&mind[k].count>=LEARN_THRESHOLD)
+          });
           showToast('⭐ Saved to favorites');
         }
       });
@@ -687,57 +1093,105 @@ function renderAll() {
 }
 
 function renderFavs() {
-  const row=document.getElementById('favRow');
-  const entries=Object.entries(favorites);
-  if(!entries.length){
-    row.innerHTML='<span style="font-size:12px;color:var(--text-muted);font-style:italic;">Tap ★ on any item to save a favorite</span>';
+  const row = document.getElementById('favRow');
+  const entries = Object.entries(favorites);
+  if (!entries.length) {
+    row.innerHTML = '<span style="font-size:12px;color:var(--text-muted);font-style:italic;">Tap ★ on any item to save a favorite</span>';
     return;
   }
-  row.innerHTML=entries.map(([k,f])=>
+  row.innerHTML = entries.map(([k,f]) =>
     `<span class="fav-pill${f.learned?' learned':''}" data-k="${k}">${f.learned?'★ ':''}${f.name}</span>`
   ).join('');
-  row.querySelectorAll('.fav-pill').forEach(pill=>{
-    pill.addEventListener('click',()=>{
-      const f=favorites[pill.dataset.k];
-      if(f) addItem(f.name,f.store,f.price,'');
+  row.querySelectorAll('.fav-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      const f = favorites[pill.dataset.k];
+      if (f) addItem(f.name, f.store, f.price, '');
     });
   });
 }
 
-// ─── SEARCH ───────────────────────────────────────────────────
-const addInput=document.getElementById('addInput');
-const sugBox=document.getElementById('suggestions');
+// ── BUILD STORE GRIDS ──
+function buildStoreGrid(containerId, selectedClass) {
+  const grid = document.getElementById(containerId);
+  grid.innerHTML = STORE_NAMES.map(s =>
+    `<button class="store-pick-btn" data-store="${s}">${s}</button>`
+  ).join('');
+  let selected = '';
+  grid.querySelectorAll('.store-pick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.store-pick-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selected = btn.dataset.store;
+    });
+  });
+  return () => selected;
+}
 
-addInput.addEventListener('input',()=>{
-  const q=addInput.value.trim().toLowerCase();
-  if(q.length<1){sugBox.classList.remove('show');return;}
-  const matches=SEARCH_LIST.filter(s=>s.keyword.startsWith(q)||s.displayName.toLowerCase().startsWith(q)).slice(0,6);
-  if(!matches.length){sugBox.classList.remove('show');return;}
+// ── UNKNOWN ITEM DRAWER ──
+let getUnknownStore;
+function initUnknownDrawer() {
+  getUnknownStore = buildStoreGrid('unknownStoreGrid');
+}
 
-  sugBox.innerHTML=matches.map(m=>{
-    const me=getMindEntry(m.keyword);
-    const isLearned=me&&(me.count>=LEARN_THRESHOLD||me.confirmed);
-    const willSkip=me&&(me.count>=SKIP_THRESHOLD||me.confirmed);
+document.getElementById('unknownSkip').addEventListener('click', () => {
+  const name = document.getElementById('unknownName').value.trim();
+  if (!name) return;
+  addItem(name, 'Walmart', '', '');
+  document.getElementById('unknownOverlay').classList.remove('show');
+});
+
+document.getElementById('unknownAdd').addEventListener('click', () => {
+  const name  = document.getElementById('unknownName').value.trim();
+  const store = getUnknownStore();
+  const price = document.getElementById('unknownPrice').value.trim();
+  if (!name) { showToast('Enter an item name'); return; }
+  if (!store) { showToast('Pick a store'); return; }
+  addItem(name, store, price, '');
+  saveToItemsDb(name, name, store, price);
+  document.getElementById('unknownOverlay').classList.remove('show');
+});
+
+function openUnknownDrawer(name) {
+  document.getElementById('unknownName').value = name;
+  document.getElementById('unknownPrice').value = '';
+  document.getElementById('unknownStoreGrid').querySelectorAll('.store-pick-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('unknownOverlay').classList.add('show');
+}
+
+// ── SEARCH ──
+const addInput = document.getElementById('addInput');
+const sugBox   = document.getElementById('suggestions');
+
+addInput.addEventListener('input', () => {
+  const q = addInput.value.trim().toLowerCase();
+  if (q.length < 1) { sugBox.classList.remove('show'); return; }
+  const matches = SEARCH_LIST.filter(s =>
+    s.keyword.startsWith(q) || s.displayName.toLowerCase().startsWith(q)
+  ).slice(0,6);
+  if (!matches.length) { sugBox.classList.remove('show'); return; }
+  sugBox.innerHTML = matches.map(m => {
+    const me = getMindEntry(m.keyword);
+    const isLearned = me && (me.count >= LEARN_THRESHOLD || me.confirmed);
+    const willSkip  = me && (me.count >= SKIP_THRESHOLD  || me.confirmed);
     return `<div class="sug-item" data-kw="${m.keyword}">
       <div class="sug-left">
         <span class="sug-name">${m.keyword.charAt(0).toUpperCase()+m.keyword.slice(1)}</span>
-        ${willSkip?'<span class="sug-sub" style="color:var(--purple)">★ Adding your usual instantly</span>':
-          isLearned?'<span class="sug-sub" style="color:var(--purple)">★ Your usual shown first</span>':
-          m.specialty?'<span class="sug-sub">Multiple types — tap to choose</span>':''}
+        ${willSkip  ? '<span class="sug-sub" style="color:var(--purple)">★ Adding your usual instantly</span>' :
+          isLearned ? '<span class="sug-sub" style="color:var(--purple)">★ Your usual shown first</span>' :
+          m.specialty ? '<span class="sug-sub">Multiple types — tap to choose</span>' : ''}
       </div>
       <div class="sug-right">
-        ${isLearned?`<span class="sug-learned">YOUR USUAL</span>`:''}
-        <span class="sug-store">${me&&isLearned?me.store:m.store}</span>
-        <span class="sug-price">${me&&isLearned?me.price:m.price}</span>
+        ${isLearned ? `<span class="sug-learned">YOUR USUAL</span>` : ''}
+        <span class="sug-store">${me&&isLearned ? me.store : m.store}</span>
+        <span class="sug-price">${me&&isLearned ? me.price : m.price}</span>
       </div>
     </div>`;
   }).join('');
-
-  sugBox.querySelectorAll('.sug-item').forEach(el=>{
-    el.addEventListener('click',()=>{
-      const entry=SEARCH_LIST.find(s=>s.keyword===el.dataset.kw);
-      if(!entry)return;
-      addInput.value='';
+  sugBox.querySelectorAll('.sug-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const entry = SEARCH_LIST.find(s => s.keyword === el.dataset.kw);
+      if (!entry) return;
+      addInput.value = '';
       sugBox.classList.remove('show');
       resolveAndAdd(entry.keyword, entry);
     });
@@ -746,43 +1200,35 @@ addInput.addEventListener('input',()=>{
 });
 
 function handleAdd() {
-  const val=addInput.value.trim();
-  if(!val)return;
-  addInput.value='';
+  const val = addInput.value.trim();
+  if (!val) return;
+  addInput.value = '';
   sugBox.classList.remove('show');
-  const lower=val.toLowerCase();
-  const entry=SEARCH_LIST.find(s=>lower.includes(s.keyword)||s.keyword.includes(lower));
-  if(entry){ resolveAndAdd(entry.keyword,entry); return; }
-  // Unknown item — add with smart defaults
-  const store='Walmart', price='~$5.00';
-  addItem(val,store,price,'');
+  const lower = val.toLowerCase();
+  const entry = SEARCH_LIST.find(s => lower.includes(s.keyword) || s.keyword.includes(lower));
+  if (entry) { resolveAndAdd(entry.keyword, entry); return; }
+  // Unknown — open drawer
+  openUnknownDrawer(val);
 }
 
-document.getElementById('addBtn').addEventListener('click',handleAdd);
-addInput.addEventListener('keydown',e=>{ if(e.key==='Enter') handleAdd(); });
-document.addEventListener('click',e=>{ if(!e.target.closest('.add-section')) sugBox.classList.remove('show'); });
+document.getElementById('addBtn').addEventListener('click', handleAdd);
+addInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleAdd(); });
+document.addEventListener('click', e => { if (!e.target.closest('.add-section')) sugBox.classList.remove('show'); });
 
-// ─── SPECIALTY PICKER ─────────────────────────────────────────
+// ── SPECIALTY PICKER ──
 function openSpecialty(entry, mindEntry) {
   document.getElementById('specialtyTitle').textContent = entry.keyword.charAt(0).toUpperCase()+entry.keyword.slice(1);
-  document.getElementById('specialtySub').textContent = mindEntry&&mindEntry.count>=LEARN_THRESHOLD
+  document.getElementById('specialtySub').textContent = mindEntry && mindEntry.count >= LEARN_THRESHOLD
     ? 'Your usual is highlighted — or pick a different type'
     : 'Choose the type you want';
-
-  const list=document.getElementById('specialtyList');
-  // Sort: learned item first if exists
-  let variants=[...entry.variants];
-  if(mindEntry&&mindEntry.name) {
-    variants.sort((a,b)=>{
-      const aMatch=a.name===mindEntry.name?-1:0;
-      const bMatch=b.name===mindEntry.name?1:0;
-      return aMatch+bMatch;
-    });
+  const list = document.getElementById('specialtyList');
+  let variants = [...entry.variants];
+  if (mindEntry && mindEntry.name) {
+    variants.sort((a,b) => (a.name===mindEntry.name?-1:0) + (b.name===mindEntry.name?1:0));
   }
-
-  list.innerHTML=variants.map((v,i)=>{
-    const isUsual=mindEntry&&v.name===mindEntry.name;
-    const count=isUsual?mindEntry.count:0;
+  list.innerHTML = variants.map(v => {
+    const isUsual = mindEntry && v.name === mindEntry.name;
+    const count   = isUsual ? mindEntry.count : 0;
     return `<div class="specialty-option${isUsual?' is-learned':''}" data-name="${v.name}" data-store="${v.store}" data-price="${v.price}" data-detail="${v.detail||''}">
       <div class="spec-left">
         <span class="spec-name">${v.name.split('—')[1]?v.name.split('—')[1].trim():v.name}</span>
@@ -795,9 +1241,8 @@ function openSpecialty(entry, mindEntry) {
       </div>
     </div>`;
   }).join('');
-
-  list.querySelectorAll('.specialty-option').forEach(opt=>{
-    opt.addEventListener('click',()=>{
+  list.querySelectorAll('.specialty-option').forEach(opt => {
+    opt.addEventListener('click', () => {
       addItem(opt.dataset.name, opt.dataset.store, opt.dataset.price, opt.dataset.detail||'');
       document.getElementById('specialtyOverlay').classList.remove('show');
     });
@@ -805,79 +1250,366 @@ function openSpecialty(entry, mindEntry) {
   document.getElementById('specialtyOverlay').classList.add('show');
 }
 
-document.getElementById('specialtyCancel').addEventListener('click',()=>document.getElementById('specialtyOverlay').classList.remove('show'));
-document.getElementById('specialtyOverlay').addEventListener('click',e=>{
-  if(e.target===document.getElementById('specialtyOverlay')) document.getElementById('specialtyOverlay').classList.remove('show');
+document.getElementById('specialtyCancel').addEventListener('click', () => document.getElementById('specialtyOverlay').classList.remove('show'));
+document.getElementById('specialtyOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('specialtyOverlay')) document.getElementById('specialtyOverlay').classList.remove('show');
 });
 
-// ─── VOICE ────────────────────────────────────────────────────
-const voiceBtn=document.getElementById('voiceBtn');
-if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const rec=new SR();
-  rec.continuous=false; rec.interimResults=false;
-  rec.onresult=e=>{ const t=e.results[0][0].transcript; addInput.value=t; addInput.dispatchEvent(new Event('input')); };
-  rec.onend=()=>voiceBtn.classList.remove('listening');
-  voiceBtn.addEventListener('click',()=>{
-    if(voiceBtn.classList.contains('listening')) rec.stop();
+// ── VOICE ──
+const voiceBtn = document.getElementById('voiceBtn');
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR  = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.continuous = false; rec.interimResults = false;
+  rec.onresult = e => { addInput.value = e.results[0][0].transcript; addInput.dispatchEvent(new Event('input')); };
+  rec.onend = () => voiceBtn.classList.remove('listening');
+  voiceBtn.addEventListener('click', () => {
+    if (voiceBtn.classList.contains('listening')) rec.stop();
     else { voiceBtn.classList.add('listening'); rec.start(); }
   });
-} else { voiceBtn.style.opacity='0.35'; }
+} else { voiceBtn.style.opacity = '0.35'; }
 
-// ─── EDIT MODAL ───────────────────────────────────────────────
+// ── RECEIPT IMPORT ──
+let getReceiptStore;
+let receiptUnmatchedItems = [];
+
+document.getElementById('receiptBtn').addEventListener('click', () => {
+  document.getElementById('receiptOverlay').classList.add('show');
+  buildReceiptStoreGrid();
+});
+
+function buildReceiptStoreGrid() {
+  const grid = document.getElementById('receiptStoreGrid');
+  grid.innerHTML = STORE_NAMES.map(s =>
+    `<button class="receipt-store-btn" data-store="${s}">${s}</button>`
+  ).join('');
+  getReceiptStore = () => {
+    const sel = grid.querySelector('.receipt-store-btn.selected');
+    return sel ? sel.dataset.store : '';
+  };
+  grid.querySelectorAll('.receipt-store-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.receipt-store-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    });
+  });
+}
+
+document.getElementById('receiptUploadArea').addEventListener('click', () => {
+  document.getElementById('receiptFileInput').click();
+});
+
+document.getElementById('receiptFileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const area = document.getElementById('receiptUploadArea');
+  area.classList.add('has-file');
+  area.querySelector('.receipt-upload-text').textContent = file.name;
+  area.querySelector('.receipt-upload-sub').textContent  = 'Ready to process';
+});
+
+document.getElementById('receiptProcess').addEventListener('click', async () => {
+  const store = getReceiptStore ? getReceiptStore() : '';
+  if (!store) { showToast('Select a store first'); return; }
+  const file = document.getElementById('receiptFileInput').files[0];
+  if (!file) { showToast('Upload a receipt first'); return; }
+  document.getElementById('receiptProcessing').classList.add('show');
+  document.getElementById('receiptProcess').disabled = true;
+  try {
+    await parseReceiptWithClaude(file, store);
+  } catch(e) {
+    showToast('Could not read receipt — try again');
+  }
+  document.getElementById('receiptProcessing').classList.remove('show');
+  document.getElementById('receiptProcess').disabled = false;
+});
+
+async function parseReceiptWithClaude(file, store) {
+  const base64 = await fileToBase64(file);
+  const isPdf  = file.type === 'application/pdf';
+  const mediaType = isPdf ? 'application/pdf' : file.type;
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{
+        role: 'user',
+        content: [
+          isPdf
+            ? { type:'document', source:{ type:'base64', media_type:mediaType, data:base64 } }
+            : { type:'image',    source:{ type:'base64', media_type:mediaType, data:base64 } },
+          { type:'text', text: `This is a grocery receipt from ${store}. Extract all purchased food/household items. For each item return JSON only — no preamble, no markdown. Format: {"items":[{"name":"item name","price":"$X.XX","matched":true/false}]}. Set matched:true only if the item clearly matches a common grocery product name. Set matched:false for anything ambiguous, store-brand codes, or non-grocery items.` }
+        ]
+      }]
+    })
+  });
+  const data = await response.json();
+  const text = (data.content||[]).map(c=>c.text||'').join('');
+  const clean = text.replace(/```json|```/g,'').trim();
+  const parsed = JSON.parse(clean);
+  processReceiptItems(parsed.items || [], store);
+}
+
+function processReceiptItems(receiptItems, store) {
+  const unmatched = [];
+  receiptItems.forEach(ri => {
+    if (ri.matched) {
+      // Find closest DB entry
+      const lower = ri.name.toLowerCase();
+      const entry = SEARCH_LIST.find(s => lower.includes(s.keyword) || s.keyword.includes(lower.split(' ')[0]));
+      const name  = entry ? (entry.specialty ? entry.variants[0].name : entry.item.name) : ri.name;
+      const k     = mindKey(name);
+      const existing = mind[k] || {};
+      set(ref(db, `households/${householdId}/mind/${k}`), {
+        name,
+        store,
+        price:       ri.price || existing.price || '',
+        count:       (existing.count||0) + 1,
+        last_bought: Date.now(),
+        confirmed:   existing.confirmed || false,
+      });
+      // Update items_db price
+      if (entry) {
+        const kw = entry.keyword;
+        update(ref(db, `households/${householdId}/items_db/${kw}`), { price: ri.price, store });
+      }
+    } else {
+      unmatched.push(ri);
+    }
+  });
+
+  if (unmatched.length) {
+    receiptUnmatchedItems = unmatched;
+    renderUnmatched(unmatched, store);
+    document.getElementById('unmatchedSection').classList.add('show');
+  } else {
+    showToast(`✓ Receipt learned — ${receiptItems.length} items`);
+    closeReceiptModal();
+  }
+}
+
+function renderUnmatched(items, defaultStore) {
+  const list = document.getElementById('unmatchedList');
+  list.innerHTML = items.map((item,i) => `
+    <div class="unmatched-item">
+      <span class="unmatched-name">${item.name} ${item.price?`(${item.price})`:''}</span>
+      <select class="unmatched-store-select" data-idx="${i}">
+        <option value="">Skip</option>
+        ${STORE_NAMES.map(s=>`<option value="${s}"${s===defaultStore?' selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+  `).join('');
+  // Update process button to save unmatched
+  const btn = document.getElementById('receiptProcess');
+  btn.textContent = 'Save & Finish';
+  btn.onclick = () => saveUnmatched();
+}
+
+function saveUnmatched() {
+  const selects = document.getElementById('unmatchedList').querySelectorAll('.unmatched-store-select');
+  selects.forEach((sel,i) => {
+    const store = sel.value;
+    if (!store) return;
+    const item = receiptUnmatchedItems[i];
+    const k = mindKey(item.name);
+    set(ref(db, `households/${householdId}/mind/${k}`), {
+      name: item.name, store, price: item.price||'', count:1, last_bought:Date.now(), confirmed:false
+    });
+    saveToItemsDb(item.name, item.name, store, item.price||'');
+  });
+  showToast('✓ Receipt fully processed');
+  closeReceiptModal();
+}
+
+function closeReceiptModal() {
+  document.getElementById('receiptOverlay').classList.remove('show');
+  document.getElementById('receiptFileInput').value = '';
+  document.getElementById('receiptUploadArea').classList.remove('has-file');
+  document.getElementById('receiptUploadArea').querySelector('.receipt-upload-text').textContent = 'Tap to upload receipt';
+  document.getElementById('receiptUploadArea').querySelector('.receipt-upload-sub').textContent  = 'Photo or PDF supported';
+  document.getElementById('unmatchedSection').classList.remove('show');
+  document.getElementById('receiptProcess').textContent = 'Process Receipt';
+  document.getElementById('receiptProcess').onclick = null;
+  // Re-attach original handler
+  document.getElementById('receiptProcess').addEventListener('click', async () => {
+    const store = getReceiptStore ? getReceiptStore() : '';
+    if (!store) { showToast('Select a store first'); return; }
+    const file = document.getElementById('receiptFileInput').files[0];
+    if (!file) { showToast('Upload a receipt first'); return; }
+    document.getElementById('receiptProcessing').classList.add('show');
+    try { await parseReceiptWithClaude(file, store); } catch(e) { showToast('Could not read receipt'); }
+    document.getElementById('receiptProcessing').classList.remove('show');
+  }, { once: true });
+}
+
+document.getElementById('receiptCancel').addEventListener('click', closeReceiptModal);
+document.getElementById('receiptOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('receiptOverlay')) closeReceiptModal();
+});
+
+function fileToBase64(file) {
+  return new Promise((res,rej) => {
+    const r = new FileReader();
+    r.onload  = () => res(r.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Read failed'));
+    r.readAsDataURL(file);
+  });
+}
+
+// ── TRIP END ──
+document.getElementById('endTripBtn').addEventListener('click', openTripModal);
+
+function openTripModal() {
+  // Build summary from done items
+  const doneItems = Object.entries(items).filter(([,v])=>v.done);
+  const byStore   = {};
+  let total = 0;
+  doneItems.forEach(([,it]) => {
+    if (!byStore[it.store]) byStore[it.store] = [];
+    byStore[it.store].push(it);
+    const p = parseFloat((it.price||'0').replace(/[^0-9.]/g,''));
+    if (!isNaN(p)) total += p;
+  });
+
+  const summaryBox = document.getElementById('tripSummaryBox');
+  summaryBox.innerHTML = Object.entries(byStore).map(([store,its]) =>
+    `<div class="trip-summary-store">${store}</div>` +
+    its.map(it=>`<div class="trip-summary-item"><span>${it.name}</span><span>${it.price||''}</span></div>`).join('')
+  ).join('') + `<div class="trip-summary-total">Total: $${total.toFixed(2)}</div>`;
+
+  // Build email options from household members
+  const emailOptions = document.getElementById('tripEmailOptions');
+  emailOptions.innerHTML = Object.values(householdData).map(m => `
+    <label class="trip-email-option" data-email="${m.email}">
+      <input type="checkbox" value="${m.email}">
+      <div class="trip-email-user">
+        <span class="trip-email-name">${m.name}</span>
+        <span class="trip-email-addr">${m.email}</span>
+      </div>
+    </label>
+  `).join('');
+
+  emailOptions.querySelectorAll('.trip-email-option').forEach(opt => {
+    opt.addEventListener('click', () => opt.classList.toggle('selected'));
+  });
+
+  // Store summary data for email
+  window._tripSummaryData = { byStore, total, doneItems };
+  document.getElementById('tripOverlay').classList.add('show');
+}
+
+document.getElementById('tripFinishBtn').addEventListener('click', () => {
+  clearDoneItems();
+  document.getElementById('tripOverlay').classList.remove('show');
+  showToast('Trip cleared — great shopping!');
+});
+
+document.getElementById('tripEmailBtn').addEventListener('click', async () => {
+  const checked = [...document.getElementById('tripEmailOptions').querySelectorAll('input[type=checkbox]:checked')];
+  if (!checked.length) { showToast('Select at least one recipient'); return; }
+  const { byStore, total } = window._tripSummaryData;
+  const summaryText = Object.entries(byStore).map(([store,its]) =>
+    `${store}:\n` + its.map(it=>`  ${it.name} ${it.price||''}`).join('\n')
+  ).join('\n\n');
+
+  // Build items array for EmailJS template
+  const allItems = Object.values(byStore).flat().map(it => ({ name:it.name, store:it.store, price:(it.price||'').replace('$',''), units:'1' }));
+
+  for (const cb of checked) {
+    try {
+      await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
+        to_email:      cb.value,
+        trip_date:     new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}),
+        store_summary: Object.keys(byStore).join(', '),
+        orders:        allItems,
+        'cost.total':  total.toFixed(2),
+        'cost.shipping': '0.00',
+        'cost.tax':    '0.00',
+        order_id:      'TRIP-' + Date.now(),
+      });
+    } catch(e) { showToast('Email failed — check EmailJS setup'); return; }
+  }
+  clearDoneItems();
+  document.getElementById('tripOverlay').classList.remove('show');
+  showToast('Summary sent & trip cleared!');
+});
+
+function clearDoneItems() {
+  Object.entries(items).forEach(([id,it]) => {
+    if (it.done) remove(ref(db, `households/${householdId}/items/${id}`));
+  });
+}
+
+// ── EDIT MODAL ──
 function openEdit(id) {
-  editingId=id;
-  const it=items[id];
-  const mk=mindKey(it.name);
-  const me=mind[mk];
-  document.getElementById('editName').value=it.name;
-  document.getElementById('editStore').value=it.store;
-  document.getElementById('editPrice').value=it.price||'';
-  document.getElementById('editNote').value=it.note||'';
-  const pinBtn=document.getElementById('editPin');
-  pinBtn.textContent=me&&me.confirmed?'📌 Pinned':'📌 Pin as go-to';
+  editingId = id;
+  const it  = items[id];
+  const mk  = mindKey(it.name);
+  const me  = mind[mk];
+  document.getElementById('editName').value  = it.name;
+  document.getElementById('editStore').value = it.store;
+  document.getElementById('editPrice').value = it.price||'';
+  document.getElementById('editNote').value  = it.note||'';
+  document.getElementById('editPin').textContent = me&&me.confirmed ? '📌 Pinned' : '📌 Pin as go-to';
   document.getElementById('editModal').classList.add('show');
 }
 
-document.getElementById('editSave').addEventListener('click',()=>{
-  if(!editingId)return;
-  update(ref(db,'items/'+editingId),{
-    name:document.getElementById('editName').value,
-    store:document.getElementById('editStore').value,
-    price:document.getElementById('editPrice').value,
-    note:document.getElementById('editNote').value,
+document.getElementById('editSave').addEventListener('click', () => {
+  if (!editingId) return;
+  const newStore = document.getElementById('editStore').value;
+  const newPrice = document.getElementById('editPrice').value;
+  update(ref(db, `households/${householdId}/items/${editingId}`), {
+    name:  document.getElementById('editName').value,
+    store: newStore,
+    price: newPrice,
+    note:  document.getElementById('editNote').value,
   });
+  // Update shared price
+  const item = items[editingId];
+  if (item) updateItemDbPrice({ ...item, store:newStore, price:newPrice });
   document.getElementById('editModal').classList.remove('show');
   showToast('Item updated');
 });
 
-document.getElementById('editPin').addEventListener('click',()=>{
-  if(!editingId)return;
-  const it=items[editingId];
-  const overrideStore=document.getElementById('editStore').value;
-  const overridePrice=document.getElementById('editPrice').value;
-  pinItem({...it, store:overrideStore, price:overridePrice});
+document.getElementById('editPin').addEventListener('click', () => {
+  if (!editingId) return;
+  const it = items[editingId];
+  pinItem({ ...it, store:document.getElementById('editStore').value, price:document.getElementById('editPrice').value });
   document.getElementById('editModal').classList.remove('show');
 });
 
-document.getElementById('editDelete').addEventListener('click',()=>{
-  if(!editingId)return;
-  remove(ref(db,'items/'+editingId));
+document.getElementById('editDelete').addEventListener('click', () => {
+  if (!editingId) return;
+  remove(ref(db, `households/${householdId}/items/${editingId}`));
   document.getElementById('editModal').classList.remove('show');
   showToast('Item removed');
 });
 
-document.getElementById('editCancel').addEventListener('click',()=>document.getElementById('editModal').classList.remove('show'));
-document.getElementById('editModal').addEventListener('click',e=>{
-  if(e.target===document.getElementById('editModal')) document.getElementById('editModal').classList.remove('show');
+document.getElementById('editCancel').addEventListener('click', () => document.getElementById('editModal').classList.remove('show'));
+document.getElementById('editModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('editModal')) document.getElementById('editModal').classList.remove('show');
 });
 
-// ─── TOAST ────────────────────────────────────────────────────
+// ── USER MENU ──
+document.getElementById('userMenuBtn').addEventListener('click', () => {
+  const opts = [`Signed in as ${currentUser.displayName}`, 'Sign Out'];
+  if (confirm(`${opts[0]}\n\nSign out?`)) {
+    signOut(auth).then(() => showScreen('auth'));
+  }
+});
+
+// ── TOAST ──
 function showToast(msg) {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2400);
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
 }
+
+// ── INIT ──
+initUnknownDrawer();
 </script>
 </body>
 </html>

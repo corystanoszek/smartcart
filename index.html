@@ -72,6 +72,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .header-actions { display: flex; gap: 6px; align-items: center; }
 .hdr-btn { background: none; border: none; font-size: 18px; cursor: pointer; padding: 4px 6px; border-radius: 8px; color: var(--text-mid); transition: background 0.15s; }
 .hdr-btn:active { background: var(--cream-dark); }
+.hdr-btn-labeled { display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; padding: 5px 9px; border: 1px solid var(--cream-border); background: var(--cream-dark); border-radius: 10px; }
+.hdr-btn-labeled span { font-size: 11px; font-weight: 600; color: var(--text-mid); }
 .header-sub { font-size: 11px; color: var(--text-muted); font-weight: 300; display: flex; align-items: center; gap: 5px; }
 .sync-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
 .sync-dot.error { background: var(--red); animation: none; }
@@ -148,6 +150,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .spec-price { font-size: 13px; color: var(--amber); font-weight: 600; }
 .spec-count { font-size: 10px; color: var(--purple); font-weight: 600; }
 .specialty-cancel { margin-top: 12px; width: 100%; padding: 12px; background: none; border: 1px solid var(--cream-border); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: var(--text-mid); cursor: pointer; }
+.spec-store-header { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; padding: 8px 4px 4px; }
+.spec-show-more { width: 100%; padding: 10px; background: var(--cream-dark); border: 1px dashed var(--cream-border); border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-mid); cursor: pointer; text-align: center; margin-top: 4px; }
+.spec-show-more:active { background: var(--amber-light); }
+.fav-pill-remove { background: none; border: none; color: var(--text-muted); font-size: 13px; cursor: pointer; margin-left: 2px; padding: 0 2px; line-height: 1; }
 
 /* ── FAVORITES ── */
 .fav-section { background: var(--cream); border-bottom: 1px solid var(--cream-border); padding: 10px 14px 12px; }
@@ -176,24 +182,27 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
 .card-divider { height: 0.5px; background: var(--cream-border); margin-bottom: 8px; }
 
 /* ── STORE COLORS ── */
-.store-aldi        { border-left: 4px solid #c47a10; }
-.store-aldi        .store-icon { background: #fff0c8; }
-.store-aldi        .store-badge { background: #fff0c8; color: #9a5a00; }
-.store-walmart     { border-left: 4px solid #1848a0; }
-.store-walmart     .store-icon { background: #e8f0fc; }
-.store-walmart     .store-badge { background: #e8f0fc; color: #1848a0; }
-.store-target      { border-left: 4px solid #a03050; }
-.store-target      .store-icon { background: #fdeef0; }
-.store-target      .store-badge { background: #fdeef0; color: #a03050; }
-.store-costco      { border-left: 4px solid #1a6a7a; }
-.store-costco      .store-icon { background: #e0f4f8; }
-.store-costco      .store-badge { background: #e0f4f8; color: #1a6a7a; }
-.store-giant-eagle { border-left: 4px solid #2d7a3a; }
-.store-giant-eagle .store-icon { background: #e8f5e4; }
-.store-giant-eagle .store-badge { background: #e8f5e4; color: #2d7a3a; }
-.store-amazon      { border-left: 4px solid #6a2a8a; }
-.store-amazon      .store-icon { background: #f0e4f8; }
-.store-amazon      .store-badge { background: #f0e4f8; color: #6a2a8a; }
+.store-aldi        { border-left: 4px solid #e07b00; }
+.store-aldi        .store-icon { background: #fdefd8; }
+.store-aldi        .store-badge { background: #fdefd8; color: #a05000; }
+.store-walmart     { border-left: 4px solid #4a90d9; }
+.store-walmart     .store-icon { background: #ddeef9; }
+.store-walmart     .store-badge { background: #ddeef9; color: #2a68a8; }
+.store-target      { border-left: 4px solid #c8b89a; }
+.store-target      .store-icon { background: #f5efe4; }
+.store-target      .store-badge { background: #f5efe4; color: #7a6040; }
+.store-costco      { border-left: 4px solid #e04040; }
+.store-costco      .store-icon { background: #fde8e8; }
+.store-costco      .store-badge { background: #fde8e8; color: #b02020; }
+.store-giant-eagle { border-left: 4px solid #8b1a2e; }
+.store-giant-eagle .store-icon { background: #f5e0e4; }
+.store-giant-eagle .store-badge { background: #f5e0e4; color: #8b1a2e; }
+.store-amazon      { border-left: 4px solid #1a1a1a; }
+.store-amazon      .store-icon { background: #e8e8e8; }
+.store-amazon      .store-badge { background: #e8e8e8; color: #1a1a1a; }
+.store-sams-club   { border-left: 4px solid #1a2d6e; }
+.store-sams-club   .store-icon { background: #dde2f5; }
+.store-sams-club   .store-badge { background: #dde2f5; color: #1a2d6e; }
 
 /* ── ITEMS ── */
 .item-row { display: flex; align-items: flex-start; padding: 7px 0; gap: 10px; border-bottom: 0.5px solid #f0e8d4; transition: opacity 0.5s; }
@@ -357,8 +366,8 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
     <div class="app-title">Smart<span>Cart</span></div>
     <div class="header-right">
       <div class="header-actions">
-        <button class="hdr-btn" id="receiptBtn" title="Import Receipt">🧾</button>
-        <button class="hdr-btn" id="userMenuBtn" title="Account">👤</button>
+        <button class="hdr-btn hdr-btn-labeled" id="receiptBtn">🧾 <span>Add Receipt</span></button>
+        <button class="hdr-btn hdr-btn-labeled" id="userMenuBtn">👤 <span>Profile</span></button>
       </div>
       <div class="total-badge" id="totalBadge">$0.00 est.</div>
     </div>
@@ -489,6 +498,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--cream-dark); min-he
         <option value="Costco">Costco</option>
         <option value="Giant Eagle">Giant Eagle</option>
         <option value="Amazon">Amazon</option>
+        <option value="Sam's Club">Sam's Club</option>
       </select>
     </div>
     <div class="modal-field">
@@ -541,173 +551,240 @@ const SKIP_THRESHOLD  = 5;
 
 // ── STORE CONFIG ──
 const STORES = {
-  'Aldi':        { cls:'store-aldi',        emoji:'🛒' },
-  'Walmart':     { cls:'store-walmart',     emoji:'🏪' },
-  'Target':      { cls:'store-target',      emoji:'🎯' },
-  'Costco':      { cls:'store-costco',      emoji:'📦' },
-  'Giant Eagle': { cls:'store-giant-eagle', emoji:'🦅' },
-  'Amazon':      { cls:'store-amazon',      emoji:'📬' },
+  'Aldi':        { cls:'store-aldi' },
+  'Walmart':     { cls:'store-walmart' },
+  'Target':      { cls:'store-target' },
+  'Costco':      { cls:'store-costco' },
+  'Giant Eagle': { cls:'store-giant-eagle' },
+  'Amazon':      { cls:'store-amazon' },
+  "Sam's Club":  { cls:'store-sams-club' },
 };
 const STORE_NAMES = Object.keys(STORES);
 
 // ── ITEM DATABASE ──
+// specialty:true items use primary[] for default display, more[] for Show More expansion
 const ITEMS = {
-  'milk': [
-    { name:'Milk — Whole Gallon',       store:'Aldi', price:'$3.29', detail:'1 gallon, whole' },
-    { name:'Milk — 2% Gallon',          store:'Aldi', price:'$3.19', detail:'1 gallon, 2%' },
-    { name:'Milk — Skim Gallon',        store:'Aldi', price:'$3.09', detail:'1 gallon, skim' },
-    { name:'Milk — Half Gallon Whole',  store:'Aldi', price:'$2.09', detail:'half gallon, whole' },
-    { name:'Milk — Organic Whole',      store:'Giant Eagle', price:'$5.99', detail:'organic, 1 gallon' },
-    { name:'Milk — Fairlife Whole',     store:'Costco', price:'$9.99', detail:'2 pack, ultra-filtered' },
-    { name:'Milk — Almond Milk',        store:'Walmart', price:'$3.48', detail:'64 oz, unsweetened' },
-    { name:'Milk — Oat Milk',           store:'Target', price:'$4.99', detail:'52 oz' },
-  ],
-  'eggs': [
-    { name:'Eggs — Large Dozen',        store:'Aldi', price:'$2.89', detail:'12 ct, large' },
-    { name:'Eggs — XL Dozen',           store:'Walmart', price:'$3.28', detail:'12 ct, XL' },
-    { name:'Eggs — Free Range Dozen',   store:'Giant Eagle', price:'$4.99', detail:'free range, 12 ct' },
-    { name:'Eggs — Organic Dozen',      store:'Giant Eagle', price:'$5.49', detail:'organic, 12 ct' },
-    { name:'Eggs — 2 Dozen',            store:'Aldi', price:'$5.49', detail:'24 ct, large' },
-    { name:'Eggs — Cage Free Dozen',    store:'Aldi', price:'$3.49', detail:'cage free, 12 ct' },
-  ],
-  'bread': [
-    { name:'Bread — White Sandwich',    store:'Aldi', price:'$1.99', detail:'20 oz loaf' },
-    { name:'Bread — Whole Wheat',       store:'Aldi', price:'$2.19', detail:'20 oz loaf' },
-    { name:"Bread — Dave's Killer",     store:'Walmart', price:'$5.98', detail:'27 oz, whole grain' },
-    { name:'Bread — Sourdough Loaf',    store:'Giant Eagle', price:'$4.49', detail:'bakery, 24 oz' },
-    { name:'Bread — Artisan Baguette',  store:'Giant Eagle', price:'$2.99', detail:'bakery fresh' },
-    { name:'Bread — Brioche',           store:'Target', price:'$4.29', detail:'sliced brioche loaf' },
-    { name:'Bread — Gluten Free',       store:'Target', price:'$6.49', detail:'gluten free loaf' },
-  ],
+  'milk': {
+    primary: [
+      { name:"Milk — Almond Breeze Unsweetened", store:'Giant Eagle', price:'$4.29', detail:'64 oz, unsweetened original' },
+      { name:'Milk — Skim Gallon',               store:'Aldi',        price:'$3.09', detail:'1 gallon, skim' },
+      { name:'Milk — Fairlife Fat Free',          store:'Giant Eagle', price:'$5.49', detail:'52 oz, ultra-filtered' },
+      { name:'Milk — Fairlife Whole',             store:'Giant Eagle', price:'$5.49', detail:'52 oz, ultra-filtered whole' },
+    ],
+    more: [
+      { name:'Milk — Whole Gallon',      store:'Aldi',    price:'$3.29', detail:'1 gallon, whole' },
+      { name:'Milk — 2% Gallon',         store:'Aldi',    price:'$3.19', detail:'1 gallon, 2%' },
+      { name:'Milk — Half Gallon Whole', store:'Aldi',    price:'$2.09', detail:'half gallon, whole' },
+      { name:'Milk — Organic Whole',     store:'Giant Eagle', price:'$5.99', detail:'organic, 1 gallon' },
+      { name:'Milk — Oat Milk',          store:'Target',  price:'$4.99', detail:'52 oz' },
+      { name:'Milk — Fairlife 2pk',      store:'Costco',  price:'$9.99', detail:'2 pack, ultra-filtered' },
+    ],
+  },
+  'eggs': {
+    primary: [
+      { name:'Eggs — Cage Free Dozen',  store:'Aldi', price:'$3.49', detail:'cage free, 12 ct' },
+      { name:'Eggs — Free Range Dozen', store:'Aldi', price:'$4.29', detail:'free range, 12 ct' },
+      { name:'Eggs — Large Dozen',      store:'Aldi', price:'$2.89', detail:'12 ct, large — cheapest' },
+    ],
+    more: [
+      { name:'Eggs — XL Dozen',      store:'Walmart',     price:'$3.28', detail:'12 ct, XL' },
+      { name:'Eggs — Organic Dozen', store:'Giant Eagle', price:'$5.49', detail:'organic, 12 ct' },
+      { name:'Eggs — 2 Dozen',       store:'Aldi',        price:'$5.49', detail:'24 ct, large' },
+    ],
+  },
+  'bread': {
+    primary: [
+      { name:"Bread — Dave's Killer 21 Whole Grains", store:'Giant Eagle', price:'$5.99', detail:'27 oz, whole grain' },
+      { name:'Bread — Rye Marbled',                   store:'Giant Eagle', price:'$3.49', detail:'marbled/dark rye loaf' },
+      { name:'Bread — Keto Bread',                    store:'Aldi',        price:'$4.29', detail:'low carb, sliced loaf' },
+    ],
+    more: [
+      { name:'Bread — White Sandwich',   store:'Aldi',        price:'$1.99', detail:'20 oz loaf' },
+      { name:'Bread — Whole Wheat',      store:'Aldi',        price:'$2.19', detail:'20 oz loaf' },
+      { name:'Bread — Sourdough Loaf',   store:'Giant Eagle', price:'$4.49', detail:'bakery, 24 oz' },
+      { name:'Bread — Artisan Baguette', store:'Giant Eagle', price:'$2.99', detail:'bakery fresh' },
+      { name:'Bread — Brioche Sliced',   store:'Target',      price:'$4.29', detail:'sliced brioche loaf' },
+      { name:'Bread — Gluten Free',      store:'Target',      price:'$6.49', detail:'gluten free loaf' },
+      { name:"Bread — Dave's Killer Thin-Sliced", store:'Walmart', price:'$5.48', detail:'thin sliced, whole grain' },
+      { name:'Bread — Texas Toast',      store:'Walmart',     price:'$2.48', detail:'thick sliced' },
+      { name:'Bread — English Muffins',  store:'Aldi',        price:'$2.29', detail:'6 ct' },
+      { name:'Bread — Naan',             store:'Walmart',     price:'$3.48', detail:'4 ct garlic naan' },
+    ],
+  },
   'butter': [
-    { name:'Butter — Salted Sticks',    store:'Aldi', price:'$3.49', detail:'4 sticks, 1 lb' },
-    { name:'Butter — Unsalted Sticks',  store:'Aldi', price:'$3.49', detail:'4 sticks, 1 lb' },
-    { name:'Butter — Land O Lakes',     store:'Walmart', price:'$4.98', detail:'1 lb, salted' },
-    { name:'Butter — Kerrygold',        store:'Costco', price:'$9.99', detail:'3 pack, Irish grass-fed' },
-    { name:'Butter — Whipped',          store:'Target', price:'$3.99', detail:'8 oz tub' },
+    { name:'Butter — Salted Sticks',   store:'Aldi',    price:'$3.49', detail:'4 sticks, 1 lb' },
+    { name:'Butter — Unsalted Sticks', store:'Aldi',    price:'$3.49', detail:'4 sticks, 1 lb' },
+    { name:'Butter — Land O Lakes',    store:'Walmart', price:'$4.98', detail:'1 lb, salted' },
+    { name:'Butter — Kerrygold',       store:'Costco',  price:'$9.99', detail:'3 pack, Irish grass-fed' },
+    { name:'Butter — Whipped',         store:'Target',  price:'$3.99', detail:'8 oz tub' },
   ],
   'cheese': [
-    { name:'Cheese — Shredded Mozzarella', store:'Aldi', price:'$3.29', detail:'8 oz bag' },
-    { name:'Cheese — Shredded Cheddar',    store:'Aldi', price:'$3.29', detail:'8 oz bag' },
-    { name:'Cheese — Sliced American',     store:'Walmart', price:'$3.98', detail:'16 slices' },
-    { name:'Cheese — Block Sharp Cheddar', store:'Aldi', price:'$3.99', detail:'8 oz block' },
-    { name:'Cheese — Parmesan Shredded',   store:'Walmart', price:'$3.48', detail:'6 oz' },
-    { name:'Cheese — Cream Cheese',        store:'Aldi', price:'$2.49', detail:'8 oz block' },
-    { name:'Cheese — Feta Crumbles',       store:'Aldi', price:'$2.99', detail:'6 oz' },
-    { name:'Cheese — Costco 3lb Blend',    store:'Costco', price:'$11.99', detail:'3 lb bag, Mexican blend' },
+    { name:'Cheese — Shredded Mozzarella',  store:'Aldi',    price:'$3.29',  detail:'8 oz bag' },
+    { name:'Cheese — Shredded Cheddar',     store:'Aldi',    price:'$3.29',  detail:'8 oz bag' },
+    { name:'Cheese — Sliced American',       store:'Walmart', price:'$3.98',  detail:'16 slices' },
+    { name:'Cheese — Block Sharp Cheddar',   store:'Aldi',    price:'$3.99',  detail:'8 oz block' },
+    { name:'Cheese — Parmesan Shredded',     store:'Walmart', price:'$3.48',  detail:'6 oz' },
+    { name:'Cheese — Cream Cheese',          store:'Aldi',    price:'$2.49',  detail:'8 oz block' },
+    { name:'Cheese — Feta Crumbles',         store:'Aldi',    price:'$2.99',  detail:'6 oz' },
+    { name:'Cheese — Provolone Sliced',      store:'Giant Eagle', price:'$3.99', detail:'8 oz deli sliced' },
+    { name:'Cheese — Swiss Sliced',          store:'Giant Eagle', price:'$3.99', detail:'8 oz sliced' },
+    { name:'Cheese — Costco 3lb Blend',      store:'Costco',  price:'$11.99', detail:'3 lb bag, Mexican blend' },
   ],
-  'yogurt': [
-    { name:'Yogurt — Greek Plain 32oz',   store:'Aldi', price:'$2.49', detail:'32 oz tub' },
-    { name:'Yogurt — Greek Vanilla 32oz', store:'Aldi', price:'$2.49', detail:'32 oz tub' },
-    { name:'Yogurt — Chobani Cup',        store:'Walmart', price:'$1.28', detail:'5.3 oz cup' },
-    { name:'Yogurt — Oikos Triple Zero',  store:'Walmart', price:'$1.48', detail:'5.3 oz cup' },
-    { name:'Yogurt — Skyr Icelandic',     store:'Target', price:'$2.99', detail:'17.6 oz' },
-  ],
-  'chicken': [
-    { name:'Chicken — Boneless Breast',  store:'Aldi', price:'$2.99/lb', detail:'per lb, fresh' },
-    { name:'Chicken — Rotisserie',       store:'Costco', price:'$4.99', detail:'hot, ready to eat' },
-    { name:'Chicken — Thighs Boneless',  store:'Aldi', price:'$2.49/lb', detail:'per lb, fresh' },
-    { name:'Chicken — Wings',            store:'Costco', price:'$2.49/lb', detail:'party wings, bulk' },
-    { name:'Chicken — Tenderloins',      store:'Walmart', price:'$3.48/lb', detail:'per lb' },
-    { name:'Chicken — Frozen Breasts',   store:'Costco', price:'$2.29/lb', detail:'bulk frozen, 10 lb' },
-  ],
-  'coffee': [
-    { name:'Coffee — Folgers Canister',  store:'Walmart', price:'$8.98', detail:'30 oz, classic roast' },
-    { name:'Coffee — Kirkland Costco',   store:'Costco', price:'$14.99', detail:'3 lb bag, medium roast' },
-    { name:'Coffee — Aldi Breakfast',    store:'Aldi', price:'$5.99', detail:'12 oz, medium roast' },
-    { name:'Coffee — Starbucks Bag',     store:'Target', price:'$10.99', detail:'12 oz bag' },
-    { name:'Coffee — Cold Brew Bags',    store:'Walmart', price:'$6.98', detail:'makes 6 pitchers' },
-  ],
+  'yogurt': {
+    primary: [
+      { name:'Yogurt — Oikos Triple Zero',      store:'Walmart', price:'$1.48', detail:'5.3 oz cup, vanilla/mixed berry' },
+      { name:'Yogurt — Oikos Triple Zero Cups',  store:'Giant Eagle', price:'$1.69', detail:'5.3 oz cup, assorted' },
+      { name:'Yogurt — Chobani Cup',             store:'Walmart', price:'$1.28', detail:'5.3 oz cup' },
+      { name:'Yogurt — Non-Fat Greek Plain',     store:'Aldi',    price:'$2.49', detail:'32 oz tub' },
+    ],
+    more: [
+      { name:'Yogurt — Greek Vanilla 32oz', store:'Aldi',   price:'$2.49', detail:'32 oz tub' },
+      { name:'Yogurt — Skyr Icelandic',     store:'Target', price:'$2.99', detail:'17.6 oz' },
+    ],
+  },
+  'chicken': {
+    primary: [
+      { name:'Chicken — Boneless Breast',          store:'Aldi',        price:'$2.99/lb', detail:'per lb, fresh' },
+      { name:'Chicken — Boneless Thighs',          store:'Aldi',        price:'$2.49/lb', detail:'per lb, fresh' },
+      { name:'Chicken — Wings',                    store:"Sam's Club",  price:'$2.29/lb', detail:'party wings, bulk' },
+      { name:'Chicken — Tyson Breast Strips',      store:'Walmart',     price:'$8.98',    detail:'frozen, 25 oz' },
+      { name:'Chicken — Amish Farms Thighs',       store:'Giant Eagle', price:'$3.99/lb', detail:'per lb, fresh' },
+      { name:'Chicken — Amish Farms Breast Tenders', store:'Giant Eagle', price:'$4.29/lb', detail:'per lb, fresh' },
+      { name:'Chicken — Just Bare Lightly Breaded', store:'Costco',     price:'$14.99',   detail:'3 lb bag, frozen' },
+    ],
+    more: [
+      { name:'Chicken — Rotisserie',     store:'Costco',  price:'$4.99',    detail:'hot, ready to eat' },
+      { name:'Chicken — Frozen Breasts', store:'Costco',  price:'$2.29/lb', detail:'bulk frozen, 10 lb' },
+      { name:'Chicken — Tenderloins',    store:'Walmart', price:'$3.48/lb', detail:'per lb' },
+    ],
+  },
+  'coffee': {
+    primary: [
+      { name:'Coffee — Decaf K-Cups',         store:'Giant Eagle', price:'$9.99',  detail:'12-24 ct box' },
+      { name:'Coffee — Decaf K-Cups Walmart',  store:'Walmart',     price:'$8.98',  detail:'12 ct box' },
+      { name:"Coffee — Decaf K-Cups Sam's",    store:"Sam's Club",  price:'$24.99', detail:'72 ct bulk box' },
+    ],
+    more: [
+      { name:'Coffee — Folgers Canister', store:'Walmart', price:'$8.98',  detail:'30 oz, classic roast' },
+      { name:'Coffee — Kirkland Costco',  store:'Costco',  price:'$14.99', detail:'3 lb bag, medium roast' },
+      { name:'Coffee — Aldi Breakfast',   store:'Aldi',    price:'$5.99',  detail:'12 oz, medium roast' },
+      { name:'Coffee — Starbucks Bag',    store:'Target',  price:'$10.99', detail:'12 oz bag' },
+      { name:'Coffee — Cold Brew Bags',   store:'Walmart', price:'$6.98',  detail:'makes 6 pitchers' },
+    ],
+  },
   'pasta': [
-    { name:'Pasta — Spaghetti 1lb',  store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Penne 1lb',      store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Rotini 1lb',     store:'Walmart', price:'$1.18', detail:'16 oz box' },
-    { name:'Pasta — Fettuccine',     store:'Aldi', price:'$1.29', detail:'16 oz box' },
-    { name:'Pasta — Gluten Free',    store:'Target', price:'$2.99', detail:'12 oz box' },
+    { name:'Pasta — Spaghetti 1lb',   store:'Aldi',    price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Penne 1lb',       store:'Aldi',    price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Rotini 1lb',      store:'Walmart', price:'$1.18', detail:'16 oz box' },
+    { name:'Pasta — Fettuccine 1lb',  store:'Aldi',    price:'$1.29', detail:'16 oz box' },
+    { name:'Pasta — Protein Pasta',   store:'Walmart', price:'$2.48', detail:'Barilla protein+, 14.5 oz' },
+    { name:'Pasta — Gluten Free',     store:'Target',  price:'$2.99', detail:'12 oz box' },
   ],
-  'paper towels': [
-    { name:'Paper Towels — Bounty 6pk',   store:'Walmart', price:'$9.97', detail:'6 double rolls' },
-    { name:'Paper Towels — Costco 12pk',  store:'Costco', price:'$22.99', detail:'12 triple rolls' },
-    { name:'Paper Towels — Aldi 2pk',     store:'Aldi', price:'$2.99', detail:'2 rolls' },
-    { name:'Paper Towels — Target Brand', store:'Target', price:'$7.99', detail:'6 rolls' },
-  ],
-  'toilet paper': [
-    { name:'Toilet Paper — Costco 30pk',  store:'Costco', price:'$19.99', detail:'30 double rolls' },
-    { name:'Toilet Paper — Charmin 12pk', store:'Walmart', price:'$9.97', detail:'12 mega rolls' },
-    { name:'Toilet Paper — Aldi 6pk',     store:'Aldi', price:'$4.99', detail:'6 rolls' },
-    { name:'Toilet Paper — Cottonelle',   store:'Target', price:'$8.99', detail:'9 rolls' },
-  ],
+  'paper towels': {
+    primary: [
+      { name:"Paper Towels — Sam's Club Bulk", store:"Sam's Club", price:'$24.99', detail:'15 triple rolls, bulk' },
+      { name:'Paper Towels — Costco 12pk',     store:'Costco',     price:'$22.99', detail:'12 triple rolls' },
+    ],
+    more: [
+      { name:'Paper Towels — Bounty 6pk',   store:'Walmart', price:'$9.97', detail:'6 double rolls' },
+      { name:'Paper Towels — Aldi 2pk',     store:'Aldi',    price:'$2.99', detail:'2 rolls' },
+      { name:'Paper Towels — Target Brand', store:'Target',  price:'$7.99', detail:'6 rolls' },
+    ],
+  },
+  'toilet paper': {
+    primary: [
+      { name:"Toilet Paper — Sam's Club 30pk", store:"Sam's Club", price:'$18.99', detail:'30 double rolls, bulk' },
+      { name:'Toilet Paper — Charmin 12pk',    store:'Walmart',    price:'$9.97',  detail:'12 mega rolls' },
+      { name:'Toilet Paper — Cottonelle 9pk',  store:'Target',     price:'$8.99',  detail:'9 rolls' },
+    ],
+    more: [
+      { name:'Toilet Paper — Costco 30pk', store:'Costco', price:'$19.99', detail:'30 double rolls' },
+      { name:'Toilet Paper — Aldi 6pk',    store:'Aldi',   price:'$4.99',  detail:'6 rolls' },
+    ],
+  },
   'olive oil': [
-    { name:'Olive Oil — Costco 2L',   store:'Costco', price:'$11.99', detail:'2 liter, extra virgin' },
-    { name:'Olive Oil — Aldi 17oz',   store:'Aldi', price:'$4.49', detail:'17 oz, extra virgin' },
-    { name:'Olive Oil — Walmart 17oz',store:'Walmart', price:'$4.98', detail:'17 oz, pure' },
+    { name:'Olive Oil — Costco 2L',    store:'Costco',  price:'$11.99', detail:'2 liter, extra virgin' },
+    { name:'Olive Oil — Aldi 17oz',    store:'Aldi',    price:'$4.49',  detail:'17 oz, extra virgin' },
+    { name:'Olive Oil — Walmart 17oz', store:'Walmart', price:'$4.98',  detail:'17 oz, pure' },
   ],
   'dish soap': [
     { name:'Dish Soap — Dawn Original',   store:'Target', price:'$3.47', detail:'19.4 oz' },
-    { name:'Dish Soap — Aldi Brand',      store:'Aldi', price:'$1.49', detail:'28 oz' },
+    { name:'Dish Soap — Aldi Brand',      store:'Aldi',   price:'$1.49', detail:'28 oz' },
     { name:'Dish Soap — Costco Dawn 3pk', store:'Costco', price:'$9.99', detail:'3 pack bulk' },
   ],
   'shampoo': [
-    { name:'Shampoo — Dove Moisturizing', store:'Target', price:'$6.99', detail:'12 oz' },
-    { name:'Shampoo — Pantene Pro-V',     store:'Walmart', price:'$4.97', detail:'12.6 oz' },
-    { name:'Shampoo — Head & Shoulders',  store:'Walmart', price:'$5.97', detail:'13.5 oz' },
-    { name:'Shampoo — Kirkland 2pk',      store:'Costco', price:'$12.99', detail:'2 x 25.4 oz' },
+    { name:'Shampoo — Dove Moisturizing', store:'Target',  price:'$6.99',  detail:'12 oz' },
+    { name:'Shampoo — Pantene Pro-V',     store:'Walmart', price:'$4.97',  detail:'12.6 oz' },
+    { name:'Shampoo — Head & Shoulders',  store:'Walmart', price:'$5.97',  detail:'13.5 oz' },
+    { name:'Shampoo — Kirkland 2pk',      store:'Costco',  price:'$12.99', detail:'2 x 25.4 oz' },
   ],
   'detergent': [
-    { name:'Laundry — Tide Costco',    store:'Costco', price:'$21.99', detail:'152 loads, HE' },
-    { name:'Laundry — Aldi Brand',     store:'Aldi', price:'$7.99', detail:'75 loads' },
-    { name:'Laundry — Arm & Hammer',   store:'Walmart', price:'$8.97', detail:'100 loads' },
-    { name:'Laundry — Tide Pods 42ct', store:'Target', price:'$14.99', detail:'42 pods' },
+    { name:'Laundry — Tide Costco',    store:'Costco',  price:'$21.99', detail:'152 loads, HE' },
+    { name:'Laundry — Aldi Brand',     store:'Aldi',    price:'$7.99',  detail:'75 loads' },
+    { name:'Laundry — Arm & Hammer',   store:'Walmart', price:'$8.97',  detail:'100 loads' },
+    { name:'Laundry — Tide Pods 42ct', store:'Target',  price:'$14.99', detail:'42 pods' },
   ],
   'rice': [
-    { name:'Rice — White Long Grain 5lb',  store:'Walmart', price:'$4.98', detail:'5 lb bag' },
-    { name:'Rice — Jasmine 5lb',           store:'Walmart', price:'$5.98', detail:'5 lb bag' },
-    { name:'Rice — Brown Long Grain',      store:'Aldi', price:'$2.99', detail:'2 lb bag' },
-    { name:'Rice — Costco Jasmine 25lb',   store:'Costco', price:'$18.99', detail:'25 lb bag, bulk' },
-    { name:'Rice — Microwavable Cups 6pk', store:'Target', price:'$3.99', detail:'ready rice' },
+    { name:'Rice — White Long Grain 5lb',  store:'Walmart',    price:'$4.98',  detail:'5 lb bag' },
+    { name:'Rice — Jasmine 5lb',           store:'Walmart',    price:'$5.98',  detail:'5 lb bag' },
+    { name:'Rice — Brown Long Grain',      store:'Aldi',       price:'$2.99',  detail:'2 lb bag' },
+    { name:'Rice — Costco Jasmine 25lb',   store:'Costco',     price:'$18.99', detail:'25 lb bag, bulk' },
+    { name:"Rice — Sam's Club 25lb",       store:"Sam's Club", price:'$16.99', detail:'25 lb bag, bulk' },
+    { name:'Rice — Microwavable Cups 6pk', store:'Target',     price:'$3.99',  detail:'ready rice' },
   ],
-  'apples': [
-    { name:'Apples — Gala 3lb Bag',    store:'Aldi', price:'$3.49', detail:'3 lb bag' },
-    { name:'Apples — Honeycrisp',      store:'Giant Eagle', price:'$1.99/lb', detail:'per pound' },
-    { name:'Apples — Fuji 3lb Bag',    store:'Walmart', price:'$3.98', detail:'3 lb bag' },
-    { name:'Apples — Granny Smith',    store:'Aldi', price:'$3.49', detail:'3 lb bag' },
-    { name:'Apples — Cosmic Crisp',    store:'Giant Eagle', price:'$2.49/lb', detail:'per pound' },
-  ],
+  'apples': {
+    primary: [
+      { name:'Apples — Gala 3lb Bag',   store:'Aldi',        price:'$3.49',    detail:'3 lb bag' },
+      { name:'Apples — Honeycrisp',     store:'Giant Eagle', price:'$1.99/lb', detail:'per pound' },
+      { name:'Apples — Fuji 3lb Bag',   store:'Walmart',     price:'$3.98',    detail:'3 lb bag' },
+      { name:'Apples — Granny Smith',   store:'Aldi',        price:'$3.49',    detail:'3 lb bag' },
+    ],
+    more: [
+      { name:"Apples — Sam's Club 5lb Bag", store:"Sam's Club", price:'$5.98',    detail:'5 lb bag, assorted' },
+      { name:'Apples — Cosmic Crisp',       store:'Giant Eagle', price:'$2.49/lb', detail:'per pound' },
+    ],
+  },
   'bananas': [
-    { name:'Bananas — Bunch',     store:'Aldi', price:'$0.49/lb', detail:'approx 5-7 bananas' },
-    { name:'Bananas — Organic',   store:'Giant Eagle', price:'$0.79/lb', detail:'organic' },
-    { name:'Plantains',           store:'Walmart', price:'$0.69/lb', detail:'green plantains' },
+    { name:'Bananas — Bunch',   store:'Aldi',        price:'$0.49/lb', detail:'approx 5-7 bananas' },
+    { name:'Bananas — Organic', store:'Giant Eagle', price:'$0.79/lb', detail:'organic' },
+    { name:'Plantains',         store:'Walmart',     price:'$0.69/lb', detail:'green plantains' },
   ],
-  'lettuce':    { name:'Lettuce — Romaine Hearts 3pk', store:'Aldi', price:'$2.49' },
-  'tomatoes':   { name:'Tomatoes — Roma 3lb',          store:'Aldi', price:'$2.99' },
-  'onions':     { name:'Onions — Yellow 3lb',          store:'Aldi', price:'$1.99' },
-  'potatoes':   { name:'Potatoes — Russet 5lb',        store:'Aldi', price:'$3.49' },
-  'carrots':    { name:'Carrots — Baby 1lb',            store:'Aldi', price:'$1.29' },
-  'spinach':    { name:'Spinach — Baby 5oz',            store:'Aldi', price:'$2.49' },
-  'broccoli':   { name:'Broccoli — Crown',              store:'Aldi', price:'$1.49' },
-  'cereal':     { name:'Cereal — Cheerios 18oz',        store:'Walmart', price:'$3.48' },
-  'oats':       { name:'Oats — Old Fashioned 42oz',     store:'Walmart', price:'$4.98' },
-  'sugar':      { name:'Sugar — White Granulated 4lb',  store:'Walmart', price:'$2.98' },
-  'flour':      { name:'Flour — All Purpose 5lb',       store:'Walmart', price:'$2.98' },
-  'juice':      { name:'OJ — Tropicana 52oz',           store:'Aldi', price:'$3.29' },
-  'chips':      { name:'Chips — Lays Classic 8oz',      store:'Walmart', price:'$3.98' },
-  'crackers':   { name:'Crackers — Ritz 13.7oz',        store:'Walmart', price:'$3.48' },
-  'salmon':     { name:'Salmon — Atlantic Fillet',      store:'Costco', price:'$9.99/lb' },
-  'steak':      { name:'Steak — Ribeye',                store:'Costco', price:'$12.99/lb' },
-  'almonds':    { name:'Almonds — Kirkland 3lb',        store:'Costco', price:'$12.99' },
-  'batteries':  { name:'Batteries — AA 48pk',           store:'Amazon', price:'$12.99' },
-  'vitamins':   { name:'Vitamins — Multivitamin',       store:'Costco', price:'$14.99' },
-  'protein':    { name:'Protein Powder — Whey 5lb',     store:'Amazon', price:'$34.99' },
-  'deodorant':  { name:'Deodorant — Degree 2pk',        store:'Target', price:'$7.99' },
-  'toothpaste': { name:'Toothpaste — Colgate Total',    store:'Target', price:'$3.99' },
+  'lettuce':    { name:'Lettuce — Romaine Hearts 3pk', store:'Aldi',    price:'$2.49' },
+  'tomatoes':   { name:'Tomatoes — Roma 3lb',          store:'Aldi',    price:'$2.99' },
+  'onions':     { name:'Onions — Yellow 3lb',          store:'Aldi',    price:'$1.99' },
+  'potatoes':   { name:'Potatoes — Russet 5lb',        store:'Aldi',    price:'$3.49' },
+  'carrots':    { name:'Carrots — Baby 1lb',           store:'Aldi',    price:'$1.29' },
+  'spinach':    { name:'Spinach — Baby 5oz',           store:'Aldi',    price:'$2.49' },
+  'broccoli':   { name:'Broccoli — Crown',             store:'Aldi',    price:'$1.49' },
+  'cereal':     { name:'Cereal — Cheerios 18oz',       store:'Walmart', price:'$3.48' },
+  'oats':       { name:'Oats — Old Fashioned 42oz',    store:'Walmart', price:'$4.98' },
+  'sugar':      { name:'Sugar — White Granulated 4lb', store:'Walmart', price:'$2.98' },
+  'flour':      { name:'Flour — All Purpose 5lb',      store:'Walmart', price:'$2.98' },
+  'juice':      { name:'OJ — Tropicana 52oz',          store:'Aldi',    price:'$3.29' },
+  'chips':      { name:'Chips — Lays Classic 8oz',     store:'Walmart', price:'$3.98' },
+  'crackers':   { name:'Crackers — Ritz 13.7oz',       store:'Walmart', price:'$3.48' },
+  'salmon':     { name:'Salmon — Atlantic Fillet',     store:'Costco',  price:'$9.99/lb' },
+  'steak':      { name:'Steak — Ribeye',               store:'Costco',  price:'$12.99/lb' },
+  'almonds':    { name:'Almonds — Kirkland 3lb',       store:'Costco',  price:'$12.99' },
+  'batteries':  { name:'Batteries — AA 48pk',          store:'Amazon',  price:'$12.99' },
+  'vitamins':   { name:'Vitamins — Multivitamin',      store:'Costco',  price:'$14.99' },
+  'protein':    { name:'Protein Powder — Whey 5lb',   store:'Amazon',  price:'$34.99' },
+  'deodorant':  { name:'Deodorant — Degree 2pk',       store:'Target',  price:'$7.99' },
+  'toothpaste': { name:'Toothpaste — Colgate Total',   store:'Target',  price:'$3.99' },
 };
 
 // Build search list
 const SEARCH_LIST = [];
 for (const [kw, val] of Object.entries(ITEMS)) {
   if (Array.isArray(val)) {
-    SEARCH_LIST.push({ keyword:kw, displayName:kw.charAt(0).toUpperCase()+kw.slice(1), store:val[0].store, price:val[0].price, specialty:true, variants:val });
+    // flat array — full specialty list, no Show More split
+    SEARCH_LIST.push({ keyword:kw, displayName:kw.charAt(0).toUpperCase()+kw.slice(1), store:val[0].store, price:val[0].price, specialty:true, variants:val, more:[] });
+  } else if (val.primary) {
+    // primary + more structure
+    const all = [...val.primary, ...(val.more||[])];
+    SEARCH_LIST.push({ keyword:kw, displayName:kw.charAt(0).toUpperCase()+kw.slice(1), store:val.primary[0].store, price:val.primary[0].price, specialty:true, variants:val.primary, more:val.more||[], allVariants:all });
   } else {
+    // single item
     SEARCH_LIST.push({ keyword:kw, displayName:val.name, store:val.store, price:val.price, specialty:false, item:val });
   }
 }
@@ -997,7 +1074,7 @@ function renderAll() {
   document.getElementById('totalBadge').textContent = '$' + total.toFixed(2) + ' est.';
 
   Object.entries(byStore).forEach(([store, storeItems]) => {
-    const cfg = STORES[store] || { cls:'store-walmart', emoji:'🏪' };
+    const cfg = STORES[store] || { cls:'store-walmart' };
     let sub = 0;
     storeItems.forEach(([,it]) => { const p = parseFloat((it.price||'0').replace(/[^0-9.]/g,'')); if(!isNaN(p)) sub+=p; });
     const card = document.createElement('div');
@@ -1005,7 +1082,7 @@ function renderAll() {
     card.innerHTML = `
       <div class="card-header">
         <div class="card-left">
-          <div class="store-icon">${cfg.emoji}</div>
+          <div class="store-icon"></div>
           <span class="store-name">${store}</span>
         </div>
         <div class="card-right">
@@ -1100,12 +1177,19 @@ function renderFavs() {
     return;
   }
   row.innerHTML = entries.map(([k,f]) =>
-    `<span class="fav-pill${f.learned?' learned':''}" data-k="${k}">${f.learned?'★ ':''}${f.name}</span>`
+    `<span class="fav-pill${f.learned?' learned':''}" data-k="${k}">${f.learned?'★ ':''}${f.name}<button class="fav-pill-remove" data-rk="${k}" title="Remove">×</button></span>`
   ).join('');
   row.querySelectorAll('.fav-pill').forEach(pill => {
-    pill.addEventListener('click', () => {
+    pill.addEventListener('click', e => {
+      if (e.target.classList.contains('fav-pill-remove')) return;
       const f = favorites[pill.dataset.k];
       if (f) addItem(f.name, f.store, f.price, '');
+    });
+  });
+  row.querySelectorAll('.fav-pill-remove').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      remove(ref(db, `households/${householdId}/favorites/${btn.dataset.rk}`));
     });
   });
 }
@@ -1222,31 +1306,53 @@ function openSpecialty(entry, mindEntry) {
     ? 'Your usual is highlighted — or pick a different type'
     : 'Choose the type you want';
   const list = document.getElementById('specialtyList');
-  let variants = [...entry.variants];
-  if (mindEntry && mindEntry.name) {
-    variants.sort((a,b) => (a.name===mindEntry.name?-1:0) + (b.name===mindEntry.name?1:0));
-  }
-  list.innerHTML = variants.map(v => {
-    const isUsual = mindEntry && v.name === mindEntry.name;
-    const count   = isUsual ? mindEntry.count : 0;
-    return `<div class="specialty-option${isUsual?' is-learned':''}" data-name="${v.name}" data-store="${v.store}" data-price="${v.price}" data-detail="${v.detail||''}">
-      <div class="spec-left">
-        <span class="spec-name">${v.name.split('—')[1]?v.name.split('—')[1].trim():v.name}</span>
-        ${v.detail?`<span class="spec-detail">${v.detail}</span>`:''}
-      </div>
-      <div class="spec-right">
-        <span class="spec-store">${v.store}</span>
-        <span class="spec-price">${v.price}</span>
-        ${count>0?`<span class="spec-count">bought ${count}×</span>`:''}
-      </div>
-    </div>`;
-  }).join('');
-  list.querySelectorAll('.specialty-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      addItem(opt.dataset.name, opt.dataset.store, opt.dataset.price, opt.dataset.detail||'');
-      document.getElementById('specialtyOverlay').classList.remove('show');
+
+  function renderVariants(variants, moreVariants) {
+    // Learned item floats first
+    let sorted = [...variants];
+    if (mindEntry && mindEntry.name) {
+      sorted.sort((a,b) => (a.name===mindEntry.name?-1:0) + (b.name===mindEntry.name?1:0));
+    }
+    // Group by store
+    const byStore = {};
+    sorted.forEach(v => { if (!byStore[v.store]) byStore[v.store]=[]; byStore[v.store].push(v); });
+
+    let html = '';
+    for (const [store, vs] of Object.entries(byStore)) {
+      html += `<div class="spec-store-header">${store}</div>`;
+      vs.forEach(v => {
+        const isUsual = mindEntry && v.name === mindEntry.name;
+        const count   = isUsual ? mindEntry.count : 0;
+        html += `<div class="specialty-option${isUsual?' is-learned':''}" data-name="${v.name}" data-store="${v.store}" data-price="${v.price}" data-detail="${v.detail||''}">
+          <div class="spec-left">
+            <span class="spec-name">${v.name.split('—')[1]?v.name.split('—')[1].trim():v.name}</span>
+            ${v.detail?`<span class="spec-detail">${v.detail}</span>`:''}
+          </div>
+          <div class="spec-right">
+            <span class="spec-store">${v.store}</span>
+            <span class="spec-price">${v.price}</span>
+            ${count>0?`<span class="spec-count">bought ${count}×</span>`:''}
+          </div>
+        </div>`;
+      });
+    }
+    if (moreVariants && moreVariants.length) {
+      html += `<button class="spec-show-more" id="specShowMore">▾ Show more options (${moreVariants.length})</button>`;
+    }
+    list.innerHTML = html;
+    list.querySelectorAll('.specialty-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        addItem(opt.dataset.name, opt.dataset.store, opt.dataset.price, opt.dataset.detail||'');
+        document.getElementById('specialtyOverlay').classList.remove('show');
+      });
     });
-  });
+    const showMoreBtn = document.getElementById('specShowMore');
+    if (showMoreBtn) {
+      showMoreBtn.addEventListener('click', () => renderVariants([...variants, ...moreVariants], []));
+    }
+  }
+
+  renderVariants(entry.variants, entry.more || []);
   document.getElementById('specialtyOverlay').classList.add('show');
 }
 
